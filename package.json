@@ -1,0 +1,30 @@
+{
+  "name": "party-site",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "consolidate": "^0.14.5",
+    "cookie-parser": "^1.4.3",
+    "dustjs-linkedin": "^2.7.5",
+    "express": "^4.16.2",
+    "mailgun-js": "^0.13.1",
+    "material-ui": "next",
+    "material-ui-icons": "^1.0.0-beta.17",
+    "mongoose": "^4.12.4",
+    "morgan": "^1.9.0",
+    "nconf": "^0.8.5",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-scripts": "1.0.14",
+    "request": "^2.83.0"
+  },
+  "scripts": {
+    "dev-start": "react-scripts start",
+    "start": "node app.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "react-scripts build"
+  }
+}
