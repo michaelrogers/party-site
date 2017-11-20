@@ -27,6 +27,6 @@ export default class UpNext extends Component {
           <Button dense color="primary">Learn More</Button>
         </CardActions> */}
       </Card>
-    )
+    );
   }
 }

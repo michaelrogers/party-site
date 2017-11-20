@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 // import Button from 'material-ui/Button';
 // import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
@@ -9,21 +10,55 @@ import IconButton from 'material-ui/IconButton';
 import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import SkipNextIcon from 'material-ui-icons/SkipNext';
-const appRoot = '//localhost:3001';
+const appRoot = 'http://localhost';
+
+const styles = theme => ({
+  card: {
+    display: 'flex',
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  content: {
+    flex: '1 0 auto',
+  },
+  cover: {
+    width: 151,
+    height: 151,
+  },
+  media: {
+    height: 200,
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+  },
+  playIcon: {
+    height: 38,
+    width: 38,
+  },
+});
+
+
+
 
 export default class Colophon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: {
-        title: 'Citizen',
-        artist: 'Broken Bells',
-        album: 'After the Disco',
-        imagery: '',
-        duration: 292066
-      },
+      // current: this.props.current,
+      // current: {
+      //   title: 'Citizen',
+      //   artist: 'Broken Bells',
+      //   album: 'After the Disco',
+      //   imagery: '',
+      //   duration: 292066
+      // },
       progress: 0,
-      elapsed: 150910
+      elapsed: 0
     };
     this.progress = this.progress.bind(this);
     this.skip = this.skip.bind(this);
@@ -31,11 +66,18 @@ export default class Colophon extends Component {
     this.fetchCurrentSong = this.fetchCurrentSong.bind(this);
     
   }
+
   timer: number;
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 1000);
-    this.fetchCurrentSong();
+    // this.fetchCurrentSong();
+  }
+  componentWillReceiveProps(props) {
+    this.setState({
+      elapsed: props.elapsed,
+      // current: props.current
+    });
   }
 
   componentWillUnmount() {
@@ -62,8 +104,9 @@ export default class Colophon extends Component {
 
   progress = () => {
     const { progress, elapsed } = this.state;
+    // const { elapsed } = this.props;
     const newElapsed = parseInt(elapsed + 1000, 10);
-    const trackDuration = this.state.current.duration;
+    const trackDuration = this.props.current.duration;
     const percentProgress = Math.floor(
       (
         1 - (trackDuration - newElapsed) / trackDuration
@@ -80,30 +123,31 @@ export default class Colophon extends Component {
   render() {
     return (
       <Card>
-        {/* <CardMedia
-          image={this.state.current.imagery}
-          title={this.state.current.album}
-        /> */}
+        <CardMedia
+          image={this.props.current.imagery}
+          title={this.props.current.album}
+          style={{height:'640px'}}
+        />
         <CardContent>
           <Typography type="caption" component="p">
             Now Playing
           </Typography>
           <Typography type="headline" component="h2">
-            {this.state.current.title}
+            {this.props.current.title}
           </Typography>
           <Typography component="p" type="subheading">
-            {this.state.current.artist}
+            {this.props.current.artist}
           </Typography>
           <Typography component="p">
-            {this.state.current.album}
+            {this.props.current.album}
           </Typography>
           <br/>
           <LinearProgress color="accent" mode="determinate" value={this.state.progress} />
           <Typography component="span" alight="left">
-            {this.state.elapsed}
+            {moment.utc(this.state.elapsed).format('m:ss')}
           </Typography>
           <Typography component="span" align="right">
-            {this.state.current.duration}
+            {moment.utc(this.props.current.duration).format('m:ss')}
           </Typography>
         </CardContent>
         <CardActions>

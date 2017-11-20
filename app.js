@@ -1,6 +1,7 @@
 // Dependencies
 const express = require('express');
 const app = express();
+const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
@@ -9,12 +10,15 @@ const path = require('path');
 const fs = require('fs');
 const nconf = require('nconf');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 // const UniqueTokenStrategy = require('passport-unique-token').Strategy;
 
-nconf
-  .file({file: './config/config.json'});
 
-const port = process.env.PORT || 3001;
+nconf.file(
+  {file: './config/config.json'});
+
+const port = process.env.PORT || 80;
+server.listen(port);
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 // Database configuration with mongoose
@@ -29,8 +33,32 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Make public a static dir
-app.use(express.static('public'));
+app.use(express.static('./public'));
 app.use(express.static('./build'));
+
+
+const whitelist = [
+  'http://localhost:8080',
+  'http://localhost',
+  'http://localhost:3000'
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else if(origin === undefined) {
+      // Allow cross site requests
+      callback(null, true);
+    } else {
+      console.error('CORS Violation at:', origin);
+      callback(
+        new Error('Not allowed by CORS')
+      );
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 
 const routes = require('./server/routes');
 
@@ -47,8 +75,6 @@ app.get('/', function (req, res) {
 db.on('error', (error) => {
   console.log('Mongoose Error:', error);
 });
-
-// Once logged in to the db through mongoose, log a success message
 db.once('open', () => {
   console.log('Mongoose connection successful.');
 });
@@ -61,11 +87,13 @@ app.set('views', path.resolve(__dirname + '/server/views'));
 cons.dust.render('notatemplate', {
   ext: app.get('view engine'),
   views: path.resolve(__dirname, app.get('views'))
-}, function() {
-  console.log('Template Engine start');
-});
+}, () => console.log('Template Engine start'));
 
-console.log(`Attempting to listen on port ${port}`);
-app.listen(port, () => {
-  console.log(`App listening on port ${port}!`);
-});
+// console.log(`Attempting to listen on port ${port}`);
+// app.listen(port, () => {
+//   console.log(`App listening on port ${port}!`);
+// });
+
+require('./sockets')(server);
+
+

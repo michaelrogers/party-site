@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "consolidate": "^0.14.5",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "dustjs-linkedin": "^2.7.5",
     "express": "^4.16.2",
     "mailgun-js": "^0.13.1",
@@ -26,5 +28,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "react-scripts build"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-plugin-react": "^7.5.1"
   }
 }
