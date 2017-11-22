@@ -40,7 +40,8 @@ app.use(express.static('./build'));
 const whitelist = [
   'http://localhost:8080',
   'http://localhost',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://localhost:3001'
 ];
 const corsOptions = {
   origin: function (origin, callback) {

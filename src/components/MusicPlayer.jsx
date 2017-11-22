@@ -43,9 +43,7 @@ const styles = theme => ({
 });
 
 
-
-
-export default class Colophon extends Component {
+export default class MusicPlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
