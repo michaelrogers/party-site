@@ -1,0 +1,23 @@
+
+
+
+
+body {
+  background: black;
+  font-family: 'Playfair Display', serif;
+  color: white;
+  overflow-x: hidden;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: inherit;
+}
+/* Helper classes */
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}

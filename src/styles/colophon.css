@@ -1,14 +1,11 @@
 
-
 .colophon-mono {
   font-family: 'Roboto', monospace;
 }
 .colophon-primary {
   font-family: 'Courgette', cursive;
 }
-body {
-  background: black;
-}
+
 .colophon,
 .colophon::before,
 .colophon::after {

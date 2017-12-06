@@ -21,7 +21,7 @@ const socket = io.connect(
   });
 
 
-export default class Music extends Component {
+export default class MusicPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,15 +60,14 @@ export default class Music extends Component {
       <div>
         <br/>
         <Grid item xs={12} lg={6}>
-        <MusicPlayer
-          current={this.state.current}
-          elapsed={this.state.elapsed}
-        />
+          <MusicPlayer
+            current={this.state.current}
+            elapsed={this.state.elapsed}
+          />
         </Grid>
         <Grid item xs={12} lg={6}>
-        
-        <br/>
-        <UpNext/>
+          <br/>
+          <UpNext/>
         </Grid>
       </div>
     );

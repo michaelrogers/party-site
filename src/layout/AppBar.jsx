@@ -1,6 +1,7 @@
 // @flow weak
+import React, { Component } from 'react';
 
-import React from 'react';
+// import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -9,6 +10,8 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
+
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -22,21 +25,31 @@ const styles = theme => ({
     marginLeft: -12,
     marginRight: 20,
   },
+  navLinks: {
+    paddingLeft: 10,
+    paddingRight: 10
+  }
 });
+// export default class ButtonAppBar extends Component {
 
 function ButtonAppBar(props) {
-  const { classes } = props;
-  return (
+  const { classes, toggleDrawer } = props;
+  return(
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Toolbar>
           <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
-            <MenuIcon />
+            <MenuIcon onClick={() => toggleDrawer()} />
           </IconButton>
           <Typography type="title" color="inherit" className={classes.flex}>
-            M + L
+            <Link to="/">M + L</Link>
           </Typography>
-          <Button color="contrast">Login</Button>
+          <div>
+            <Link className={classes.navLinks} to="/details">Details</Link>
+            <Link className={classes.navLinks} to="/people">Party People</Link>
+            <Link className={classes.navLinks} to="/gifts">Gifts</Link>
+            <Link className={classes.navLinks} to="/rsvp">RSVP</Link>
+          </div>
         </Toolbar>
       </AppBar>
     </div>
