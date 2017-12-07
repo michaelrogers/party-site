@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 const styles = theme => ({
   root: {
     // marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
     width: '100%',
   },
   flex: {

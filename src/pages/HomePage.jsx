@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 // import Typography from 'material-ui/Typography';
 import { Typography, Button } from 'material-ui';
 import { Link } from 'react-router-dom';
+import Grid from 'material-ui/Grid';
 
 export default class HomePage extends Component {
   render() {
     return (
-      <main>
+      <Grid item>
         <img style={{width: '1024px'}} className="img-responsive" src="/images/invitation.jpg"/>
         {/*
         <Typography>
@@ -20,7 +21,7 @@ export default class HomePage extends Component {
         <Link to="/details">
           <Button>Details</Button>
         </Link>
-      </main>
+      </Grid>
     );
   }
 }

@@ -48,7 +48,6 @@ class App extends Component {
           Link={Link}
         />
         <Grid container spacing={24}>
-          <Grid item>
             <Switch>
               <Route
                 path="/"
@@ -80,7 +79,6 @@ class App extends Component {
                 component={NotFoundPage} 
               />
             </Switch>
-          </Grid>
         </Grid>
       </div>
     );

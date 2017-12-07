@@ -4,7 +4,7 @@
 
 body {
   background: black;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Raleway', serif !important;
   color: white;
   overflow-x: hidden;
 }
