@@ -6,25 +6,23 @@ import {
 } from 'react-router-dom';
 
 // import logo from './logo.svg';
-import './styles/app.css';
-import Grid from 'material-ui/Grid';
+import './styles/index.css';
 
-// import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+// import Grid from 'material-ui/Grid';
 import HomePage from './pages/HomePage';
+
+// =====Pages=======================
 import DetailsPage from './pages/DetailsPage';
 import MusicPage from './pages/MusicPage';
 import GiftsPage from './pages/GiftsPage';
 import PeoplePage from './pages/PeoplePage';
 import RSVPPage from './pages/RSVPPage';
 import NotFoundPage from './pages/NotFoundPage';
-
-
-// import MusicPage from './pages/MusicPage';
-// import NotFoundPage from './pages/NotFoundPage';
+// =====Components==================
 import AppBar from './layout/AppBar';
 import Drawer from './layout/Drawer';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,42 +45,40 @@ class App extends Component {
           toggleDrawer={this.toggleDrawer}
           Link={Link}
         />
-        <Grid container spacing={24}>
-            <Switch>
-              <Route
-                path="/"
-                exact
-                component={HomePage}
-              />
-              <Route
-                path="/music"
-                component={MusicPage}
-              />
-              <Route
-                path="/details"
-                component={DetailsPage}
-              />
-              <Route
-                path="/people"
-                component={PeoplePage}
-              />
-              <Route
-                path="/gifts"
-                component={GiftsPage}
-              />
-              <Route
-                path="/rsvp"
-                component={RSVPPage}
-              />
-              <Route 
-                path="*"
-                component={NotFoundPage} 
-              />
-            </Switch>
-        </Grid>
+        <main>
+          <Switch>
+            <Route
+              path="/"
+              exact
+              component={HomePage}
+            />
+            <Route
+              path="/music"
+              component={MusicPage}
+            />
+            <Route
+              path="/details"
+              component={DetailsPage}
+            />
+            <Route
+              path="/people"
+              component={PeoplePage}
+            />
+            <Route
+              path="/gifts"
+              component={GiftsPage}
+            />
+            <Route
+              path="/rsvp"
+              component={RSVPPage}
+            />
+            <Route 
+              path="*"
+              component={NotFoundPage} 
+            />
+          </Switch>
+        </main>
       </div>
     );
   }
 }
-
-export default App;

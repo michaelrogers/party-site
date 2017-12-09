@@ -9,6 +9,9 @@ module.exports = mongoose.model(
       type: String,
       required: true
     },
+    email: {
+      type: String
+    },
     isAttending: {
       type: Boolean,
       required: true,

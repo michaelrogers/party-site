@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
-// import Typography from 'material-ui/Typography';
-import { Typography, Button } from 'material-ui';
+import { 
+  Typography,
+  Button,
+  Grid
+} from 'material-ui';
 import { Link } from 'react-router-dom';
-import Grid from 'material-ui/Grid';
 
 export default class HomePage extends Component {
   render() {
     return (
-      <Grid item>
-        <img style={{width: '1024px'}} className="img-responsive" src="/images/invitation.jpg"/>
-        {/*
-        <Typography>
-          Michael &amp; Leigh
-        </Typography>
-        <Typography>
-          Wedding Celebration
-        </Typography>
-        */}
-        <br/>
-        <Link to="/details">
-          <Button>Details</Button>
-        </Link>
+      <Grid container justify="center" alignItems="center" spacing={24}>
+        <Grid item xs={12} lg={8}>
+          <img style={{width: '1024px'}} className="img-responsive" src="/images/invitation.jpg"/>
+          <div style={{textAlign: 'center'}}>
+            <Typography>Michael &amp; Leigh</Typography>
+            <Typography>Wedding Celebration</Typography>
+            <br/>
+            <Link to="/details">
+              <Button>Details</Button>
+            </Link>
+          </div>
+        </Grid>
       </Grid>
     );
   }

@@ -25,26 +25,33 @@ export default class DrawerCustom extends Component {
           onClick={() => this.props.toggleDrawer()}
           onKeyDown={() => this.props.toggleDrawer()}
         >
-          <div /*className={classes.list}*/>
+          <div /*className={classes.list}*/ style={{minWidth: '200px'}}>
             <List>
-              <ListItem button>
-                <Link to="/">
+
+              <Link to="/">
+                <ListItem button>
                   <ListItemText primary="M + L"/>
-                </Link>
-              </ListItem>
+                </ListItem>
+              </Link>
               <Divider />
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-              </ListItem>
+              
+              <Link to="/details">
+                <ListItem button>
+                  <ListItemText primary="Details" />
+                </ListItem>
+              </Link>
+              
+              <Link to="/people">
+                <ListItem button>
+                  <ListItemText primary="Party People" />
+                </ListItem>
+              </Link>
+              <Link to="/people">
+                <ListItem button>
+                  <ListItemText primary="Gifts" />
+                </ListItem>
+              </Link>
+
             </List>
             <Divider />
             <List></List>

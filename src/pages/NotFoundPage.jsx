@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 export default class NotFoundPage extends Component {
   render() {
     return (
-      <Grid item xs={12} lg={6}>
-        <Typography>Seems Like you are lost friend</Typography>
-        <Link to="/">
-        <Button>
-          Fly Home!
-          </Button>
+      <Grid container justify="center" spacing={24}>
+        <Grid item xs={12} lg={6}>
+          <Typography>Seems Like you are lost friend</Typography>
+          <Link to="/">
+            <Button>Fly Home!</Button>
           </Link>
+        </Grid>
       </Grid>
     );
   }
