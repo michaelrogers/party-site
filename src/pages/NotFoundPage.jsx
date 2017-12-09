@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Grid from 'material-ui/Grid';
-import { Typography, Button } from 'material-ui';
+import { Typography, Button, Grid} from 'material-ui';
 import { Link } from 'react-router-dom';
 
 export default class NotFoundPage extends Component {

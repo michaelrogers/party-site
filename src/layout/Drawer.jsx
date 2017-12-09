@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Drawer, Divider } from 'material-ui';
 
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import InboxIcon from 'material-ui-icons/Inbox';
-import DraftsIcon from 'material-ui-icons/Drafts';
-import { Link } from 'react-router-dom';
+// import InboxIcon from 'material-ui-icons/Inbox';
+// import DraftsIcon from 'material-ui-icons/Drafts';
 
 
 
@@ -46,12 +46,16 @@ export default class DrawerCustom extends Component {
                   <ListItemText primary="Party People" />
                 </ListItem>
               </Link>
-              <Link to="/people">
+              <Link to="/gifts">
                 <ListItem button>
                   <ListItemText primary="Gifts" />
                 </ListItem>
               </Link>
-
+              <Link to="/rsvp">
+                <ListItem button>
+                  <ListItemText primary="RSVP" />
+                </ListItem>
+              </Link>
             </List>
             <Divider />
             <List></List>

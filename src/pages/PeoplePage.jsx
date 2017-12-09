@@ -7,10 +7,11 @@ export default class PeoplePage extends Component {
   render() {
     return (
       <Grid container justify="center" spacing={24}>
-      <Grid item xs={12} lg={8}>
+      <Grid item xs={12} lg={6}>
       <Grid container>
         <Grid item xs={12}>
-          <Typography type="title">RSVP</Typography>
+          <Typography type="title">PARTY MAIDS &amp; PARTYMEN
+          </Typography>
         </Grid>
             <Grid item xs={12}>
               <Avatars/>

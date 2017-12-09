@@ -6,6 +6,4 @@ const asyncMiddlware = require('../middlewares/async');
 
 router.post('/rsvp', rsvpController.submit);
 
-
-
 module.exports = router;
