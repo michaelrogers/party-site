@@ -49,7 +49,7 @@ function ButtonAppBar(props) {
           <Hidden mdDown>
             <Link className={classes.navLinks} to="/details">Details</Link>
             <Link className={classes.navLinks} to="/people">Party People</Link>
-            <Link className={classes.navLinks} to="/gifts">Gifts</Link>
+            <Link className={classes.navLinks} to="/registry">Registry</Link>
             <Link className={classes.navLinks} to="/rsvp">RSVP</Link>
           </Hidden>
         </Toolbar>

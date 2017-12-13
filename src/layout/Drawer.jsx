@@ -46,9 +46,9 @@ export default class DrawerCustom extends Component {
                   <ListItemText primary="Party People" />
                 </ListItem>
               </Link>
-              <Link to="/gifts">
+              <Link to="/registry">
                 <ListItem button>
-                  <ListItemText primary="Gifts" />
+                  <ListItemText primary="Registry" />
                 </ListItem>
               </Link>
               <Link to="/rsvp">

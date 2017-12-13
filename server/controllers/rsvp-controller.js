@@ -11,7 +11,7 @@ const rsvp = require('../models/rsvp');
 
 module.exports = {
   submit: async function(req, res) {
-    console.log('req', req.body);
+    console.log('req.body', req.body);
     // const newRSVP = new rsvp({
     //   guestName: req.body.name,
     //   isAttending: true,

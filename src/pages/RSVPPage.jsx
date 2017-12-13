@@ -5,8 +5,12 @@ import {
   Card,
   CardContent,
   Typography,
-  Grid
+  Grid,
+  Divider
 } from 'material-ui';
+import { CSSTransitionGroup } from 'react-transition-group';
+
+
 import axios from 'axios';
 
 export default class RSVPPage extends Component {
@@ -43,9 +47,10 @@ export default class RSVPPage extends Component {
       }
     });
   }
-  submitForm() {
+  submitForm(e) {
+    e.preventDefault();
     axios.post('http://localhost' + '/api/rsvp',
-      { name: 'test' },
+      { form: this.state.form },
       { 'Content-Type': 'application/json' }
     ).then(() => {
       this.setState({hasSubmitted: true});
@@ -64,59 +69,69 @@ export default class RSVPPage extends Component {
       <Grid container justify="center" spacing={24}>
         <Grid item xs={12} lg={4}>
           <Grid>
-            <Typography type="title">RSVP</Typography>
-            <Typography type="subtitle">
-            We are so excited to celebrate this momentous occasion! Are you in? 
+            <Typography type="title" className="page-header" align="center">RSVP</Typography>
+            <br/>
+            <Divider className="divider" />
+            <br/>
+            <br/>
+            <Typography type="subtitle" align="center">
+              { this.state.hasSubmitted ? 'Thanks for letting us know! If you entered your email, you will get a confirmation email shortly. Feel free to share the party info with friends!' : 'We are so excited to celebrate this momentous occasion! Are you in?' }
             </Typography>
+            <br/>
+            <br/>
+            <br/>
+            <Card>
+              <CardContent>
+                <form style={{display: this.state.hasSubmitted ? 'none' : 'block' }} >
+                  <TextField
+                    id="name"
+                    label="Guest Name"
+                    value={this.state.form.name}
+                    onChange={(e) => this.handleChange('name', e)}
+                    margin="normal"
+                    fullWidth
+                    required
+                    autoFocus
+                  /><br/>
+                  <TextField
+                    id="number"
+                    label="Number Attending"
+                    value={this.state.form.number}
+                    onChange={this.handleNumberChange}
+                    margin="normal"
+                    type="number"
+                    min="0"
+                    fullWidth
+                    required
+                  /><br/>
+                  
+                  <TextField
+                    id="email"
+                    label="Email"
+                    value={this.state.form.email}
+                    onChange={(e) => this.handleChange('email', e)}
+                    margin="normal"
+                    type="email"
+                    fullWidth
+                  /><br/>
 
-            <form>
-              <TextField
-                id="name"
-                label="Guest Name"
-                value={this.state.form.name}
-                onChange={(e) => this.handleChange('name', e)}
-                margin="normal"
-                fullWidth
-                required
-                autoFocus
-              /><br/>
-              <TextField
-                id="number"
-                label="Number Attending"
-                value={this.state.form.number}
-                onChange={this.handleNumberChange}
-                margin="normal"
-                type="number"
-                min="0"
-                fullWidth
-                required
-              /><br/>
-              
-              <TextField
-                id="email"
-                label="Email"
-                value={this.state.form.email}
-                onChange={(e) => this.handleChange('email', e)}
-                margin="normal"
-                type="email"
-                fullWidth
-              /><br/>
-
-              <TextField
-                id="note"
-                label="Note"
-                multiline
-                rowsMax="8"
-                value={this.state.form.note}
-                onChange={(e) => this.handleChange('note', e)}
-                fullWidth
-                margin="normal"
-              /><br/>
-              <br/>
-              <div style={{textAlign: 'center'}}>
-                <Button onClick={this.submitForm}>Send</Button>
-              </div>
-            </form>
+                  <TextField
+                    id="note"
+                    label="Note"
+                    multiline
+                    rowsMax="8"
+                    value={this.state.form.note}
+                    onChange={(e) => this.handleChange('note', e)}
+                    fullWidth
+                    margin="normal"
+                  /><br/>
+                  <br/>
+                  <div style={{textAlign: 'center'}}>
+                    <Button type="submit" onClick={this.submitForm}>Send Response</Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </Grid>

@@ -31,8 +31,8 @@ exports = module.exports = function(server) {
       });
 
   };
-
-  setInterval(fetchCurrentSong, 10000);
+  // Commented out
+  // setInterval(fetchCurrentSong, 10000);
 
 
   io.on('connection', socket => {

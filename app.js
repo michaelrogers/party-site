@@ -18,7 +18,8 @@ nconf.file(
   {file: './config/config.json'});
 
 const port = process.env.PORT || 80;
-server.listen(port);
+server.listen(port, () => console.log('Info: Listening on port ' + port));
+
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 // Database configuration with mongoose
@@ -67,18 +68,14 @@ const routes = require('./server/routes');
 for (let route in routes) {
   app.use(route, routes[route]);
 }
-
+// Send the react dist to client
 app.get('/', function (req, res) {
   res.sendFile(path.resolve(__dirname + '/index.html'));
 });
 
 // Show any mongoose errors
-db.on('error', (error) => {
-  console.log('Mongoose Error:', error);
-});
-db.once('open', () => {
-  console.log('Mongoose connection successful.');
-});
+db.on('error', (error) => console.log('Mongoose Error:', error));
+db.once('open', () => console.log('Mongoose connection successful.'));
 
 // Set template engine
 app.engine('dust', cons.dust);
