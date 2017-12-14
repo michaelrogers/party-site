@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Make public a static dir
-app.use(express.static('./public'));
+// app.use(express.static('./public'));
 app.use(express.static('./build'));
 
 
