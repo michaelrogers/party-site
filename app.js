@@ -62,19 +62,21 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Send the react dist to client
+app.get('/', function (req, res) {
+  const directory = (path.resolve(__dirname + '/index.html'));
+  console.log(directory);
+  res.sendFile(directory);
+});
 const routes = require('./server/routes');
 
 //Iterate through the routes
 for (let route in routes) {
   app.use(route, routes[route]);
 }
-// Send the react dist to client
-app.get('/', function (req, res) {
-  res.sendFile(path.resolve(__dirname + '/index.html'));
-});
 
 // Show any mongoose errors
-db.on('error', (error) => console.log('Mongoose Error:', error));
+db.on('error', error => console.log('Mongoose Error:', error));
 db.once('open', () => console.log('Mongoose connection successful.'));
 
 // Set template engine

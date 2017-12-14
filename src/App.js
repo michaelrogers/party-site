@@ -4,7 +4,7 @@ import {
   Link,
   Switch
 } from 'react-router-dom';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 
 // import logo from './logo.svg';
 import './styles/index.css';
@@ -47,14 +47,12 @@ export default class App extends Component {
           Link={Link}
         />
         <main>
-        {/*
-        <CSSTransitionGroup
+        <Switch>
+        <TransitionGroup
         transitionName="fade"
         transitionEnterTimeout={300}
         transitionLeaveTimeout={300}
       >
-        */}
-          <Switch>
             <Route
               path="/"
               exact
@@ -84,8 +82,8 @@ export default class App extends Component {
               path="*"
               component={NotFoundPage} 
             />
+            </TransitionGroup>
             </Switch>
-            {/* </CSSTransitionGroup> */}
         </main>
       </div>
     );
