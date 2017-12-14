@@ -14,11 +14,11 @@ export default class HomePage extends Component {
         <Grid container justify="center" alignItems="center" spacing={24} >
           <Grid item xs={12} lg={8}>
             <div style={{textAlign: 'center', position: 'absolute', top: '50%', color: 'black'}}>
-              <Typography>MICHAEL &amp; LEIGH</Typography>
-              <Typography>INVITE YOU</Typography>
-              <Typography>TO THEIR WEDDING</Typography>
-              <Typography>CELEBRATION</Typography>
-              <Typography>JANUARY 20, 2018</Typography>
+              <Typography style={{fontSize: '30px'}}>MICHAEL &amp; LEIGH</Typography>
+              <Typography style={{fontSize: '30px'}}>INVITE YOU</Typography>
+              <Typography style={{fontSize: '30px'}}>TO THEIR WEDDING</Typography>
+              <Typography style={{fontSize: '30px'}}>CELEBRATION</Typography>
+              <Typography style={{fontSize: '30px'}}>JANUARY 20, 2018</Typography>
               <br/>
               <Link to="/details">
                 <Button>Details</Button>

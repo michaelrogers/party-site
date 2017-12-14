@@ -34,15 +34,22 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Make public a static dir
-// app.use(express.static('./public'));
-app.use(express.static('./build'));
+if (process.env.enviroment === 'PROD') {
+  app.use(express.static('./build'));
+} else {
+  app.use(express.static('./public'));
+}
+
 
 
 const whitelist = [
   'http://localhost:8080',
   'http://localhost',
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'https://michael-and-leigh.herokuapp.com',
+  'https://michaelandleigh.com',
+  'https://www.michaelandleigh.com'
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -61,7 +68,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 // Send the react dist to client
 app.get('/', function (req, res) {
   const directory = (path.resolve(__dirname + '/index.html'));
@@ -87,7 +98,7 @@ app.set('views', path.resolve(__dirname + '/server/views'));
 cons.dust.render('notatemplate', {
   ext: app.get('view engine'),
   views: path.resolve(__dirname, app.get('views'))
-}, () => console.log('Template Engine start'));
+}, () => console.log('Info: Dust templating active'));
 
 // console.log(`Attempting to listen on port ${port}`);
 // app.listen(port, () => {

@@ -1,7 +1,9 @@
-// const rsvpController = require('../controllers/spotify-controller.js');
-// const router = require('express').Router();
+const rsvpController = require('../controllers/rsvp-controller.js');
+const router = require('express').Router();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
 
-// // router.post('/', rsvpController.submit);
+router.post('/', jsonParser, rsvpController.submit);
 
-// module.exports = router;
+module.exports = router;

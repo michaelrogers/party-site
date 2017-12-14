@@ -47,12 +47,13 @@ export default class App extends Component {
           Link={Link}
         />
         <main>
-        <Switch>
         <TransitionGroup
         transitionName="fade"
         transitionEnterTimeout={300}
         transitionLeaveTimeout={300}
       >
+        <Switch>
+
             <Route
               path="/"
               exact
@@ -82,8 +83,8 @@ export default class App extends Component {
               path="*"
               component={NotFoundPage} 
             />
-            </TransitionGroup>
             </Switch>
+          </TransitionGroup>
         </main>
       </div>
     );

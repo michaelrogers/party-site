@@ -14,8 +14,8 @@ const styles = {
     margin: 10,
   },
   bigAvatar: {
-    width: 100,
-    height: 100,
+    width: 105,
+    height: 105,
   },
 };
 

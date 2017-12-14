@@ -12,17 +12,17 @@ import { CSSTransitionGroup } from 'react-transition-group';
 
 
 import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 export default class RSVPPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        name: '',
-        email: '',
-        number: 1,
-        note: ''
-      },
+      name: '',
+      email: '',
+      number: 1,
+      note: '',
       hasSubmitted: false
     };
     this.handleNumberChange = this.handleNumberChange.bind(this);
@@ -35,26 +35,33 @@ export default class RSVPPage extends Component {
     if (number >= 0) {
       safeNumber = number;
     }
-    this.setState({form: {
+    this.setState({
       number: safeNumber
-    }});
+    });
   } 
 
   handleChange(name, event) {
     this.setState({
-      form: {
-        [name]: event.target.value
-      }
+      [name]: event.target.value
     });
   }
   submitForm(e) {
     e.preventDefault();
-    axios.post('http://localhost' + '/api/rsvp',
-      { form: this.state.form },
-      { 'Content-Type': 'application/json' }
-    ).then(() => {
+    console.log(this.state);
+    const { name, email, number, note } = this.state;
+    axios({
+      method: 'POST',
+      url: '/rsvp',
+      responseType: 'json',
+      data: {
+        name,
+        email,
+        number,
+        note
+      }
+    }).then((data) => {
       this.setState({hasSubmitted: true});
-      console.log('Great success');
+      console.log('Great success', data);
     }).catch(err => console.error(err));
 
   }
@@ -74,19 +81,19 @@ export default class RSVPPage extends Component {
             <Divider className="divider" />
             <br/>
             <br/>
-            <Typography type="subtitle" align="center">
+            <Typography type="subheading" align="center">
               { this.state.hasSubmitted ? 'Thanks for letting us know! If you entered your email, you will get a confirmation email shortly. Feel free to share the party info with friends!' : 'We are so excited to celebrate this momentous occasion! Are you in?' }
             </Typography>
             <br/>
             <br/>
             <br/>
-            <Card>
+            <Card style={{display: this.state.hasSubmitted ? 'none' : 'block' }}>
               <CardContent>
-                <form style={{display: this.state.hasSubmitted ? 'none' : 'block' }} >
+                <form style={{display: this.state.hasSubmitted ? 'none' : 'block' }} onSubmit={this.submitForm}>
                   <TextField
                     id="name"
                     label="Guest Name"
-                    value={this.state.form.name}
+                    value={this.state.name}
                     onChange={(e) => this.handleChange('name', e)}
                     margin="normal"
                     fullWidth
@@ -96,7 +103,7 @@ export default class RSVPPage extends Component {
                   <TextField
                     id="number"
                     label="Number Attending"
-                    value={this.state.form.number}
+                    value={this.state.number}
                     onChange={this.handleNumberChange}
                     margin="normal"
                     type="number"
@@ -108,7 +115,7 @@ export default class RSVPPage extends Component {
                   <TextField
                     id="email"
                     label="Email"
-                    value={this.state.form.email}
+                    value={this.state.email}
                     onChange={(e) => this.handleChange('email', e)}
                     margin="normal"
                     type="email"
@@ -120,14 +127,14 @@ export default class RSVPPage extends Component {
                     label="Note"
                     multiline
                     rowsMax="8"
-                    value={this.state.form.note}
+                    value={this.state.note}
                     onChange={(e) => this.handleChange('note', e)}
                     fullWidth
                     margin="normal"
                   /><br/>
                   <br/>
                   <div style={{textAlign: 'center'}}>
-                    <Button type="submit" onClick={this.submitForm}>Send Response</Button>
+                    <Button type="submit" >Send Response</Button>
                   </div>
                 </form>
               </CardContent>
