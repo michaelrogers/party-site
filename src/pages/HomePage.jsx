@@ -20,7 +20,11 @@ const styles = {
   },
   titleText: {
     color: 'rgb(78, 202, 189)',
-    fontWeight: 600
+    fontWeight: 600,
+    textShadow: '1px 2px 2px rgba(43, 109, 101, 0.3)'
+  },
+  titleBlock: {
+    // textAlign: 'center', position: 'absolute', top: '15%', left: 0, right: 0
   }
 };
 
@@ -32,7 +36,7 @@ export default class HomePage extends Component {
         <div className="cover"  style={styles.backgroundImage}></div>
         <Grid container justify="center" alignItems="center" spacing={24} >
           <Grid item xs={12} lg={8}>
-            <div style={{textAlign: 'center', position: 'absolute', top: '15%', left: 0, right: 0, color: 'black'}}>
+            <div style={styles.titleBlock} className="title-block">
               <Typography style={{fontSize: '30px', ...styles.titleText}}>
                 MICHAEL &amp; LEIGH
               </Typography>

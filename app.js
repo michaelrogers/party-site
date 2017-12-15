@@ -34,9 +34,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Make public a static dir
-// if (process.env.enviroment === 'PROD') {
-// } else {
-// }
+
 app.use(express.static('./public'));
 app.use(express.static('./build'));
 
@@ -74,11 +72,18 @@ app.use(function(req, res, next) {
   next();
 });
 // Send the react dist to client
-app.get('/', function (req, res) {
-  const directory = (path.resolve(__dirname + '/index.html'));
-  console.log(directory);
+if (process.env.enviroment === 'PROD') {
+  app.get('/*', function (req, res) {
+  const directory = (path.resolve(__dirname + 'build' + 'index.html'));
   res.sendFile(directory);
 });
+} else {
+  app.get('/*', function (req, res) {
+  const directory = (path.resolve(__dirname + 'public' + 'index.html'));
+  res.sendFile(directory);
+});
+}
+
 const routes = require('./server/routes');
 
 //Iterate through the routes

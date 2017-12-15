@@ -23,6 +23,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import AppBar from './layout/AppBar';
 import Drawer from './layout/Drawer';
 
+
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +51,8 @@ export default class App extends Component {
         
         <main>
           <CSSTransition
-            transitionName="fade"
+            classNames="fade"
+            in={true}
             appear={true}
           >
             <Switch>
