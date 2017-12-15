@@ -19,14 +19,15 @@ main h2 {
   margin-bottom: 1em !important;
 }
 
+.fade-appear,
 .fade-enter {
-  opacity: 0;
+  opacity: 0.01;
   z-index: 1;
 }
-
+.fade-appear.fade-appear-active,
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 250ms ease-in;
+  transition: opacity 1 ease-in;
 }
 
 
@@ -59,4 +60,27 @@ a:active {
 .img-responsive {
   max-width: 100%;
   height: auto;
+}
+.button-details {
+  font-size: 20px !important;
+  color: rgba(78, 202, 189, 1) !important;
+  border: 2px solid rgba(78, 202, 189, 0.5) !important;
+  transform: color 1s, background 1s, border-color 1s;
+}
+.button-details:hover {
+  color: white !important;
+  background: rgba(78, 202, 189, 1) !important;
+  /* border-color: black !important; */
+}
+
+.drawer-item h3 {
+  font-weight: 300;
+}
+.navbar-link span:first-child {
+  border-bottom: 2px solid transparent;
+  line-height: 1;
+  text-shadow: 0px 0px 0px 2px rgb(33, 33, 33);
+}
+.navbar-link.active span:first-child {
+  border-bottom-color: turquoise;
 }

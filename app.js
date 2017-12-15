@@ -34,11 +34,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Make public a static dir
-if (process.env.enviroment === 'PROD') {
-  app.use(express.static('./build'));
-} else {
-  app.use(express.static('./public'));
-}
+// if (process.env.enviroment === 'PROD') {
+// } else {
+// }
+app.use(express.static('./public'));
+app.use(express.static('./build'));
 
 
 

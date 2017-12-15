@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { 
   Typography,
   Button,
   Divider,
-  Paper,
+  // Paper,
   Grid
 } from 'material-ui';
 
 
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+// import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 
 export default class DetailsPage extends Component {
   render() {

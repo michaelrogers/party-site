@@ -30,7 +30,7 @@ export default class GiftsPage extends Component {
 
           <br/>
           <div style={{textAlign: 'center'}}>
-            <Button target="_blank" href="https://www.blueprintregistry.com/registry/LeighandMichael01.13.18">Visit the registry</Button>
+            <Button target="_blank" rel="noopener" href="https://www.blueprintregistry.com/registry/LeighandMichael01.13.18">Visit the registry</Button>
           </div>
         </Grid>
       </Grid>

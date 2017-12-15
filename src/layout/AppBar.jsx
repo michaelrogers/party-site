@@ -1,5 +1,5 @@
 // @flow weak
-import React, { Component } from 'react';
+import React from 'react';
 
 // import React from 'react';
 import PropTypes from 'prop-types';
@@ -27,9 +27,11 @@ const styles = theme => ({
     marginLeft: -12,
     marginRight: 20,
   },
-  navLinks: {
-    paddingLeft: 10,
-    paddingRight: 10
+
+  navButton: {
+    height: 62,
+    fontFamily: 'Raleway, sans-serif',
+    textTransform: 'initial'
   }
 });
 // export default class ButtonAppBar extends Component {
@@ -47,10 +49,18 @@ function ButtonAppBar(props) {
             <Link to="/">M + L</Link>
           </Typography>
           <Hidden mdDown>
-            <Link className={classes.navLinks} to="/details">Details</Link>
-            <Link className={classes.navLinks} to="/people">Party People</Link>
-            <Link className={classes.navLinks} to="/registry">Registry</Link>
-            <Link className={classes.navLinks} to="/rsvp">RSVP</Link>
+            <Link className="navbar-link" to="/details">
+              <Button className={classes.navButton}>Details</Button>
+            </Link>
+            <Link className="navbar-link" to="/people">
+              <Button className={classes.navButton}>Party People</Button>
+            </Link>
+            <Link className="navbar-link" to="/registry">
+              <Button className={classes.navButton}>Registry</Button>
+            </Link>
+            <Link className="navbar-link" to="/rsvp">
+              <Button className={classes.navButton}>RSVP</Button>
+            </Link>
           </Hidden>
         </Toolbar>
       </AppBar>

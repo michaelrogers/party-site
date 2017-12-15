@@ -51,9 +51,10 @@ function ImageAvatars(props) {
   const { classes } = props;
   return (
     <div className={classes.row}>
-      {avatarData.map(person => {
+      {avatarData.map((person, i) => {
         return (
           <Avatar
+            key={i}
             alt={person.name}
             src={person.src}
             className={classNames(classes.avatar, classes.bigAvatar)}

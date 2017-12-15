@@ -5,7 +5,9 @@ import { Drawer, Divider } from 'material-ui';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 // import InboxIcon from 'material-ui-icons/Inbox';
 // import DraftsIcon from 'material-ui-icons/Drafts';
+const styles = {
 
+};
 
 
 export default class DrawerCustom extends Component {
@@ -37,23 +39,23 @@ export default class DrawerCustom extends Component {
               
               <Link to="/details">
                 <ListItem button>
-                  <ListItemText primary="Details" />
+                  <ListItemText className="drawer-item" primary="Details" />
                 </ListItem>
               </Link>
               
               <Link to="/people">
                 <ListItem button>
-                  <ListItemText primary="Party People" />
+                  <ListItemText className="drawer-item" primary="Party People" />
                 </ListItem>
               </Link>
               <Link to="/registry">
                 <ListItem button>
-                  <ListItemText primary="Registry" />
+                  <ListItemText className="drawer-item" primary="Registry" />
                 </ListItem>
               </Link>
               <Link to="/rsvp">
                 <ListItem button>
-                  <ListItemText primary="RSVP" />
+                  <ListItemText className="drawer-item" primary="RSVP" />
                 </ListItem>
               </Link>
             </List>
