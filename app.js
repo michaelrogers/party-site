@@ -74,14 +74,15 @@ app.use(function(req, res, next) {
 // Send the react dist to client
 if (process.env.enviroment === 'PROD') {
   app.get('/*', function (req, res) {
-  const directory = (path.resolve(__dirname + 'build' + 'index.html'));
-  res.sendFile(directory);
-});
-} else {
-  app.get('/*', function (req, res) {
-  const directory = (path.resolve(__dirname + 'public' + 'index.html'));
-  res.sendFile(directory);
-});
+    const directory = (path.resolve(__dirname + 'build' + 'index.html'));
+    res.sendFile(directory);
+  });
+// }
+//  else {
+//   app.get('/*', function (req, res) {
+//     const directory = (path.resolve(__dirname + 'public' + 'index.html'));
+//     res.sendFile(directory);
+// });
 }
 
 const routes = require('./server/routes');
