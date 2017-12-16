@@ -10,19 +10,20 @@ const mailgun = require('mailgun-js')({
 const adminEmailAddresses = process.env.adminEmail || nconf.get('server:adminEmail');
 console.log(adminEmailAddresses)
 const newRSVPEmail = (guestName, numberAttending, isAttending) => {
+  const toAddress = adminEmailAddresses || '<mhrogers12@gmail.com>';
   return {
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
-    to: adminEmailAddresses | 'mhrogers12@gmail.com',
+    to: toAddress,
     subject: `${guestName} RSVP'd`,
     text: `
       <p>${guestName} just RVSP'd that they ${isAttending ? 'are' : 'are not'} with ${numberAttending} in their party.</p>
     `
   };
 };
-const confirmRSVPEmail = (guestName, numberAttending, _isAttending) => {
+const confirmRSVPEmail = (guestName, numberAttending, _isAttending, emailAddress) => {
   return {
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
-    to: adminEmailAddresses | 'mhrogers12@gmail.com',
+    to: emailAddress,
     subject: "We've received your RSVP",
     text: `
       <p>Hi ${guestName},</p>
@@ -61,13 +62,13 @@ module.exports = {
       console.log(success);
         
       mailgun.messages().send(
-        newRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending),
-        (err, body) => console.log(err || body));
+        newRSVPEmail(newRSVP.guestName, newRSVP.numberAttending, newRSVP.isAttending),
+        (err, body) => console.log('newRSVP: ', err || body));
 
       if (emailAddress) {
         mailgun.messages().send(
-          confirmRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending),
-          (err, body) => console.log(err || body));
+          confirmRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending, emailAddress),
+          (err, body) => console.log('Confirmation: ', err || body));
       }
       res.send(rsvp);
     });
