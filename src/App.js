@@ -54,6 +54,7 @@ export default class App extends Component {
             classNames="fade"
             in={true}
             appear={true}
+            timeout={1000}
           >
             <Switch>
               <Route

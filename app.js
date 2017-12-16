@@ -18,24 +18,21 @@ nconf.file(
   {file: './config/config.json'});
 
 const port = process.env.PORT || 80;
-server.listen(port, () => console.log('Info: Listening on port ' + port));
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 // Database configuration with mongoose
-mongoose.createConnection(process.env.MONGODB_URI || nconf.get('server:mongoURI'));
+mongoose.connect(process.env.MONGODB_URI || nconf.get('server:mongoURI'));
 const db = mongoose.connection;
-
+// Show any mongoose errors
+db.on('error', error => console.log('Mongoose Error:', error));
+db.once('open', () => console.log('Mongoose connection successful.'));
 // Use morgan and body parser with our app
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
-
-// Make public a static dir
-
-
 
 
 const whitelist = [
@@ -96,19 +93,17 @@ for (let route in routes) {
   app.use(route, routes[route]);
 }
 
-// Show any mongoose errors
-db.on('error', error => console.log('Mongoose Error:', error));
-db.once('open', () => console.log('Mongoose connection successful.'));
+
 
 // Set template engine
-app.engine('dust', cons.dust);
-app.set('view engine', 'dust');
-app.set('views', path.resolve(__dirname + '/server/views'));
+// app.engine('dust', cons.dust);
+// app.set('view engine', 'dust');
+// app.set('views', path.resolve(__dirname + '/server/views'));
 
-cons.dust.render('notatemplate', {
-  ext: app.get('view engine'),
-  views: path.resolve(__dirname, app.get('views'))
-}, () => console.log('Info: Dust templating active'));
+// cons.dust.render('notatemplate', {
+//   ext: app.get('view engine'),
+//   views: path.resolve(__dirname, app.get('views'))
+// }, () => console.log('Info: Dust templating active'));
 
 // console.log(`Attempting to listen on port ${port}`);
 // app.listen(port, () => {
@@ -117,4 +112,5 @@ cons.dust.render('notatemplate', {
 
 require('./sockets')(server);
 
+server.listen(port, () => console.log('Info: Listening on port ' + port));
 

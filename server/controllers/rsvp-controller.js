@@ -1,13 +1,15 @@
 
 const nconf = require('nconf');
+const rsvp = require('../models/rsvp');
+
 const mailgun = require('mailgun-js')({
   apiKey: process.env.mailgun || nconf.get('server:mailgun'),
   domain: 'mail.michaelandleigh.com'
 });
 
 const adminEmailAddresses = process.env.adminEmail || nconf.get('server:adminEmail');
-const rsvp = require('../models/rsvp');
-const newRSVP = (guestName, numberAttending, isAttending) => {
+console.log(adminEmailAddresses)
+const newRSVPEmail = (guestName, numberAttending, isAttending) => {
   return {
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
     to: adminEmailAddresses | 'mhrogers12@gmail.com',
@@ -17,11 +19,11 @@ const newRSVP = (guestName, numberAttending, isAttending) => {
     `
   };
 };
-const confirmRSVP = (guestName, numberAttending, isAttending) => {
+const confirmRSVPEmail = (guestName, numberAttending, _isAttending) => {
   return {
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
     to: adminEmailAddresses | 'mhrogers12@gmail.com',
-    subject: `We've received your RSVP`,
+    subject: "We've received your RSVP",
     text: `
       <p>Hi ${guestName},</p>
       <br/>
@@ -48,9 +50,9 @@ module.exports = {
       email: emailAddress,
       isAttending: numberAttending > 0,
       numberAttending: numberAttending,
-      notes: req.body.notes
+      notes: req.body.note
     });
-    console.log(newRSVP);
+    console.log('NewRSVP before save', newRSVP);
     newRSVP.save((error, success) => {
       if (error) {
         console.log(error);
@@ -59,15 +61,14 @@ module.exports = {
       console.log(success);
         
       mailgun.messages().send(
-        newRSVP(req.body.guestName, req.body.numberAttending, req.body.isAttending),
+        newRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending),
         (err, body) => console.log(err || body));
 
       if (emailAddress) {
         mailgun.messages().send(
-          confirmRSVP(req.body.guestName, req.body.numberAttending, req.body.isAttending),
+          confirmRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending),
           (err, body) => console.log(err || body));
       }
-      console.log(rsvp);
       res.send(rsvp);
     });
 
