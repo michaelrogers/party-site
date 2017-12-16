@@ -70,7 +70,7 @@ app.use(function(req, res, next) {
   next();
 });
 // Send the react dist to client
-if (process.env.enviroment === 'PROD') {
+if (process.env.environment === 'PROD') {
   console.log('Info: Prod mode');
   app.use(express.static('./build'));
   app.use(express.static(path.join(__dirname, 'client/build')));
