@@ -41,35 +41,35 @@ const confirmRSVP = (guestName, numberAttending, isAttending) => {
 
 module.exports = {
   submit: function(req, res, next) {
-      const numberAttending = parseInt(req.body.number, 10) || 0;
-      const emailAddress = req.body.email;
-      const newRSVP = new rsvp({
-        guestName: req.body.name,
-        email: emailAddress,
-        isAttending: numberAttending > 0,
-        numberAttending: numberAttending,
-        notes: req.body.notes
-      });
-      console.log(newRSVP);
-      newRSVP.save((error, success) => {
-        if (error) {
-          console.log(error);
-          next(error);
-        }
-        console.log(success);
+    const numberAttending = parseInt(req.body.number, 10) || 0;
+    const emailAddress = req.body.email;
+    const newRSVP = new rsvp({
+      guestName: req.body.name,
+      email: emailAddress,
+      isAttending: numberAttending > 0,
+      numberAttending: numberAttending,
+      notes: req.body.notes
+    });
+    console.log(newRSVP);
+    newRSVP.save((error, success) => {
+      if (error) {
+        console.log(error);
+        next(error);
+      }
+      console.log(success);
         
       mailgun.messages().send(
         newRSVP(req.body.guestName, req.body.numberAttending, req.body.isAttending),
         (err, body) => console.log(err || body));
 
-        if (emailAddress) {
+      if (emailAddress) {
         mailgun.messages().send(
           confirmRSVP(req.body.guestName, req.body.numberAttending, req.body.isAttending),
           (err, body) => console.log(err || body));
-        }
+      }
       console.log(rsvp);
       res.send(rsvp);
-      });
+    });
 
   }
 

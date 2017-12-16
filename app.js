@@ -35,8 +35,6 @@ app.use(cookieParser());
 
 // Make public a static dir
 
-app.use(express.static('./public'));
-app.use(express.static('./build'));
 
 
 
@@ -73,16 +71,22 @@ app.use(function(req, res, next) {
 });
 // Send the react dist to client
 if (process.env.enviroment === 'PROD') {
+  console.log('Info: Prod mode');
+  app.use(express.static('./build'));
+  app.use(express.static(path.join(__dirname, 'client/build')));
+
   app.get('/*', function (req, res) {
     const directory = (path.resolve(__dirname + 'build' + 'index.html'));
     res.sendFile(directory);
   });
-// }
-//  else {
-//   app.get('/*', function (req, res) {
-//     const directory = (path.resolve(__dirname + 'public' + 'index.html'));
-//     res.sendFile(directory);
-// });
+} else {
+  console.log('Info: Dev mode');
+  app.use(express.static('./public'));
+
+  app.get('/*', function (req, res) {
+    const directory = (path.resolve(__dirname + 'public' + 'index.html'));
+    res.sendFile(directory);
+  });
 }
 
 const routes = require('./server/routes');
