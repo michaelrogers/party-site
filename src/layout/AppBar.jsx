@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 const styles = theme => ({
   root: {
     // marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 6,
+    marginBottom: theme.spacing.unit * 15,
     width: '100%',
   },
   flex: {
@@ -48,7 +48,7 @@ function ButtonAppBar(props) {
           <Typography type="title" color="inherit" className={classes.flex}>
             <Link to="/">M + L</Link>
           </Typography>
-          <Hidden mdDown>
+          <Hidden smDown>
             <Link className="navbar-link" to="/details">
               <Button className={classes.navButton}>Details</Button>
             </Link>

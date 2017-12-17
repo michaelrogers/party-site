@@ -8,14 +8,13 @@ const mailgun = require('mailgun-js')({
 });
 
 const adminEmailAddresses = process.env.adminEmail || nconf.get('server:adminEmail');
-console.log(adminEmailAddresses)
 const newRSVPEmail = (guestName, numberAttending, isAttending) => {
   const toAddress = adminEmailAddresses || '<mhrogers12@gmail.com>';
   return {
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
     to: toAddress,
     subject: `${guestName} RSVP'd`,
-    text: `
+    html: `
       <p>${guestName} just RVSP'd that they ${isAttending ? 'are' : 'are not'} with ${numberAttending} in their party.</p>
     `
   };
@@ -25,17 +24,17 @@ const confirmRSVPEmail = (guestName, numberAttending, _isAttending, emailAddress
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
     to: emailAddress,
     subject: "We've received your RSVP",
-    text: `
+    // html: { path: '../views/emails/alert.html' }
+    html: `
       <p>Hi ${guestName},</p>
-      <br/>
       <p>Thanks for RSVP'ing, we have you down for ${numberAttending}. Please let us know if your plans change.</p>
-      <hr/>
-      <p>Event Date</p>
+      <br/>
+      <h4>Event Date</h4>
       <p>January 20th, 2018</p>
       <p>7:00 PM - 12:01AM</p>
       <br/>
-      <p>Location</p>
-      <p>Sharespace Warehouse</p>
+      <h4>Location</h4>
+      <p><em>Sharespace Warehouse</em></p>
       <p>2203 Preston Street</p>
       <p>Houston, TX</p>
       `
@@ -43,36 +42,28 @@ const confirmRSVPEmail = (guestName, numberAttending, _isAttending, emailAddress
 };
 
 module.exports = {
-  submit: function(req, res, next) {
+  submit: async function(req, res, next) {
     const numberAttending = parseInt(req.body.number, 10) || 0;
     const emailAddress = req.body.email;
+    const guestName = req.body.name;
+    const isAttending = numberAttending > 0;
     const newRSVP = new rsvp({
-      guestName: req.body.name,
+      guestName: guestName,
       email: emailAddress,
-      isAttending: numberAttending > 0,
+      isAttending: isAttending,
       numberAttending: numberAttending,
       notes: req.body.note
     });
-    console.log('NewRSVP before save', newRSVP);
-    newRSVP.save((error, success) => {
-      if (error) {
-        console.log(error);
-        next(error);
-      }
-      console.log(success);
-        
-      mailgun.messages().send(
-        newRSVPEmail(newRSVP.guestName, newRSVP.numberAttending, newRSVP.isAttending),
-        (err, body) => console.log('newRSVP: ', err || body));
+    await newRSVP.save();
+      await mailgun.messages().send(
+        newRSVPEmail(guestName, numberAttending, isAttending));
 
       if (emailAddress) {
-        mailgun.messages().send(
-          confirmRSVPEmail(req.body.guestName, req.body.numberAttending, req.body.isAttending, emailAddress),
-          (err, body) => console.log('Confirmation: ', err || body));
+        await mailgun.messages().send(
+          confirmRSVPEmail(guestName, numberAttending, isAttending, emailAddress)
+        );
       }
       res.send(rsvp);
-    });
-
   }
 
 };

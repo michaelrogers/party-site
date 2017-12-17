@@ -89,6 +89,11 @@ export default class App extends Component {
             </Switch>
           </CSSTransition>
         </main>
+        <footer>
+          <br/>
+          <br/>
+          <br/>
+        </footer>
       </div>
     );
   }

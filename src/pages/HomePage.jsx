@@ -6,10 +6,12 @@ import {
 } from 'material-ui';
 import { Link } from 'react-router-dom';
 
+import backgroundImage from '../assets/cover.jpg';
+
 const styles = {
   backgroundImage: {
     backgroundColor: 'rgb(235, 239, 240)',
-    backgroundImage: 'url("/images/Party%20Website%20Cover.jpg")',
+    backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'absolute',
@@ -32,7 +34,7 @@ const styles = {
 export default class HomePage extends Component {
   render() {
     return (
-      <main>
+      <div>
         <div className="cover"  style={styles.backgroundImage}></div>
         <Grid container justify="center" alignItems="center" spacing={24} >
           <Grid item xs={12} lg={8}>
@@ -53,13 +55,14 @@ export default class HomePage extends Component {
                 JANUARY 20, 2018
               </Typography>
               <br/>
+              <br/>
               <Link to="/details">
                 <Button className="button-details">Details</Button>
               </Link>
             </div>
           </Grid>
         </Grid>
-      </main>
+      </div>
     );
   }
 }

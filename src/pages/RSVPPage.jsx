@@ -74,7 +74,7 @@ export default class RSVPPage extends Component {
   render() {
     return (
       <Grid container justify="center" spacing={24}>
-        <Grid item xs={12} lg={4}>
+        <Grid item xs={10} lg={4}>
           <Grid>
             <Typography type="title" className="page-header" align="center">RSVP</Typography>
             <br/>
@@ -124,6 +124,7 @@ export default class RSVPPage extends Component {
 
                   <TextField
                     id="note"
+                    placeholder="Send us some love or request a song"
                     label="Note"
                     multiline
                     rowsMax="8"

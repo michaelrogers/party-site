@@ -8,6 +8,7 @@ const styles = {
   row: {
     display: 'flex',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   avatar: {
     backgroundColor:'rgba(43,43,43,0.7)',

@@ -8,9 +8,12 @@ const styles = {
   row: {
     display: 'flex',
     justifyContent: 'center',
+    width: '100%',
+    flexWrap: 'wrap'
   },
   avatar: {
     margin: 10,
+    display: 'inline-block'
   },
   bigAvatar: {
     width: 105,
@@ -19,6 +22,30 @@ const styles = {
 };
 
 const avatarData = [
+  {
+    name: 'Amanda Penney',
+    src: '/images/partypeople/amanda.jpg'
+  },
+  {
+    name: 'Mara Castro',
+    src: '/images/partypeople/mara.jpg'
+  },
+  {
+    name: 'Megan Irvin',
+    src: '/images/partypeople/megan.jpg'
+  },
+  {
+    name: 'Minhthy Vu',
+    src: '/images/partypeople/minhthy.jpg'
+  },
+  {
+    name: 'Renee Fiala',
+    src: '/images/partypeople/renee.jpg'
+  },
+  {
+    name: 'Stephanie Garman',
+    src: '/images/partypeople/stephanie.jpg'
+  },
   {
     name: 'Alex Steimle',
     src: '/images/partypeople/alex.jpg',
