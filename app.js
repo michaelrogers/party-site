@@ -72,7 +72,7 @@ if (process.env.environment === 'PROD') {
   app.use(express.static(path.join(__dirname, 'build')));
   
   app.get('/*', function (req, res) {
-    const directory = path.join(__dirname + 'build' + 'index.html');
+    const directory = path.join(__dirname, 'build', 'index.html');
     res.sendFile(directory);
   });
 } else {
@@ -80,7 +80,7 @@ if (process.env.environment === 'PROD') {
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.get('/*', function (req, res) {
-    const directory = path.join(__dirname + 'public' + 'index.html');
+    const directory = path.join(__dirname, 'public', 'index.html');
     res.sendFile(directory);
   });
 }
