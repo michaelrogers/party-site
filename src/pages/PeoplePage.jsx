@@ -12,7 +12,7 @@ export default class PeoplePage extends Component {
         <CustomParticles />
         <Grid item xs={10} lg={8}>
           <Grid container alignItems="center" justify="center">
-            <Grid item xs={10} lg={8}>
+            <Grid item xs={10}>
               <div className="particle-transition">
                 <Typography type="title" className="page-header" align="center">PARTYMAIDS &amp; PARTYMEN</Typography>
               </div>

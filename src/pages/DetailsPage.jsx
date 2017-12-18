@@ -27,7 +27,7 @@ export default class DetailsPage extends Component {
                   <div className="details-wrapper" >
                     <br/>
                     <Typography type="body1" align="center" style={{width: '100%'}}>
-                    After eight years of dating, Michael & Leigh will begin a new life together in January 2018 in a private ceremony with their family.
+                    After eight years of dating, Michael & Leigh will begin a new life together in January 2018 in a private ceremony with their families.
                     </Typography>
                     <br/>
                     <Typography type="body1" align="center" style={{width: '100%'}}>
@@ -81,7 +81,7 @@ export default class DetailsPage extends Component {
                     <iframe style={{ backgroundColor: 'darkgrey', width: '100%' }}
                       // width="600"
                       height="250"
-                      src="https://maps.googleapis.com/maps/embed/v1/place?key=AIzaSyAQbuK2K8_Ii0RNadzmsAJZN5zaXqmyPHY&center=29.757656691602048,-95.34717518013304&zoom=16&maptype=roadmap&q=Sharespace+Warehouse,2203+Preston+Street,Houston+TX" >
+                      src="https://maps.googleapis.com/maps/embed/v1/place?key=AIzaSyCaa4FCPfuZF7lLmZyTz3Rz4n7tnl-4-N0&center=29.757656691602048,-95.34717518013304&zoom=16&maptype=roadmap&q=Sharespace+Warehouse,2203+Preston+Street,Houston+TX" >
                     </iframe>
                   </div>
                 </Grid>
