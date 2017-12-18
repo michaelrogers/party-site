@@ -61,16 +61,22 @@ module.exports = {
       notes: req.body.note
     });
     console.log(newRSVP);
-    await newRSVP.save();
+    try {
+      await newRSVP.save();
       await mailgun.messages().send(
         newRSVPEmail(guestName, numberAttending, isAttending));
-
-      if (emailAddress) {
-        await mailgun.messages().send(
-          confirmRSVPEmail(guestName, numberAttending, isAttending, emailAddress)
-        );
-      }
-      res.send(rsvp);
+        
+        if (emailAddress) {
+          await mailgun.messages().send(
+            confirmRSVPEmail(guestName, numberAttending, isAttending, emailAddress)
+          );
+        }
+        res.send(newRSVP);
+    } catch(e) {
+      console.error(e);
+      next(e);
+      // res.send(e);
+    }
   }
 
 };

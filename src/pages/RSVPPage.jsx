@@ -62,7 +62,7 @@ export default class RSVPPage extends Component {
         number,
         note
       }
-    }).then((data) => {
+    }).then(data => {
       this.setState({hasSubmitted: true});
       console.log('Great success', data);
     }).catch(err => console.error(err));
@@ -88,12 +88,6 @@ export default class RSVPPage extends Component {
       );
     } 
   }
-
-  // handleChange = name => event => {
-  //   this.setState({
-  //     [name]: event.target.value,
-  //   });
-  // };
 
   render() {
     return (
