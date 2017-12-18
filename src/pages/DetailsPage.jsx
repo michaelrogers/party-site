@@ -81,7 +81,7 @@ export default class DetailsPage extends Component {
                     <iframe style={{ backgroundColor: 'darkgrey', width: '100%' }}
                       // width="600"
                       height="250"
-                      src="https://maps.googleapis.com/maps/embed/v1/place?key=AIzaSyCaa4FCPfuZF7lLmZyTz3Rz4n7tnl-4-N0&center=29.757656691602048,-95.34717518013304&zoom=16&maptype=roadmap&q=Sharespace+Warehouse,2203+Preston+Street,Houston+TX" >
+                      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCaa4FCPfuZF7lLmZyTz3Rz4n7tnl-4-N0&q=Sharespace+Warehouse,2203+Preston+Street,Houston+TX" allowFullScreen>
                     </iframe>
                   </div>
                 </Grid>
