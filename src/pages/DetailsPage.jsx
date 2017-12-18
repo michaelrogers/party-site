@@ -41,6 +41,7 @@ export default class DetailsPage extends Component {
                       Seven to Midnight<br />
                     </Typography>
                   </div>
+                  <br/>
                 </Grid>
               </Grid>
               <br/>
