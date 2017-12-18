@@ -28,7 +28,6 @@ const db = mongoose.connection;
 db.on('error', error => console.log('Mongoose Error:', error));
 db.once('open', () => console.log('Mongoose connection successful.'));
 // Use morgan and body parser with our app
-app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -69,6 +68,7 @@ app.use(function(req, res, next) {
 // Send the react dist to client
 if (process.env.environment === 'PROD') {
   console.log('Info: Prod mode');
+  app.use(logger('tiny'));
   app.use(express.static(path.join(__dirname, 'build')));
   
   app.get('/*', function (req, res) {
@@ -77,6 +77,7 @@ if (process.env.environment === 'PROD') {
   });
 } else {
   console.log('Info: Dev mode');
+  app.use(logger('dev'));
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.get('/*', function (req, res) {
