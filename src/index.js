@@ -4,7 +4,8 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router';
 
 const options = {
   palette: {
@@ -14,9 +15,11 @@ const options = {
 
 const theme = createMuiTheme(options);
 
+const AppWithRouter = withRouter(App);
+
 const ThemedApp = () => (
   <MuiThemeProvider theme={theme}>
-    <App/>
+    <AppWithRouter />
   </MuiThemeProvider>
 );
 
@@ -25,5 +28,8 @@ const ThemedApp = () => (
 ReactDOM.render((
   <BrowserRouter>
     <ThemedApp />
-  </BrowserRouter>), document.getElementById(':{'));
+  </BrowserRouter>),
+document.getElementById(':{')
+);
+
 registerServiceWorker();

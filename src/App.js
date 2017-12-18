@@ -50,44 +50,48 @@ export default class App extends Component {
         />
         
         <main>
-          <CSSTransition
-            classNames="fade"
-            in={true}
-            appear={true}
-            timeout={1000}
-          >
-            <Switch>
-              <Route
-                path="/"
-                exact
-                component={HomePage}
-              />
-              <Route
-                path="/music"
-                component={MusicPage}
-              />
-              <Route
-                path="/details"
-                component={DetailsPage}
-              />
-              <Route
-                path="/people"
-                component={PeoplePage}
-              />
-              <Route
-                path="/registry"
-                component={RegistryPage}
-              />
-              <Route
-                path="/rsvp"
-                component={RSVPPage}
-              />
-              <Route 
-                path="*"
-                component={NotFoundPage} 
-              />
-            </Switch>
-          </CSSTransition>
+          <TransitionGroup>
+            <CSSTransition
+              classNames='fade'
+              in={true}
+              appear={false}
+              exit={false}
+              timeout={{exit: 0, enter: 300}}
+              key={this.props.location.key}
+            >
+              <Switch location={this.props.location}>
+                <Route
+                  path="/"
+                  exact
+                  component={HomePage}
+                />
+                <Route
+                  path="/music"
+                  component={MusicPage}
+                />
+                <Route
+                  path="/details"
+                  component={DetailsPage}
+                />
+                <Route
+                  path="/people"
+                  component={PeoplePage}
+                />
+                <Route
+                  path="/registry"
+                  component={RegistryPage}
+                />
+                <Route
+                  path="/rsvp"
+                  component={RSVPPage}
+                />
+                <Route 
+                  path="*"
+                  component={NotFoundPage} 
+                />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
         </main>
         <footer>
           <br/>
