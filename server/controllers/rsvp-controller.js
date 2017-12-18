@@ -60,6 +60,7 @@ module.exports = {
       numberAttending: numberAttending,
       notes: req.body.note
     });
+    console.log(newRSVP);
     await newRSVP.save();
       await mailgun.messages().send(
         newRSVPEmail(guestName, numberAttending, isAttending));

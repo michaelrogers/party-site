@@ -70,10 +70,10 @@ app.use(function(req, res, next) {
 if (process.env.environment === 'PROD') {
   console.log('Info: Prod mode');
   app.use(express.static('./build'));
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  // app.use(express.static(path.join(__dirname, 'client/build')));
 
   app.get('/*', function (req, res) {
-    const directory = (path.resolve(__dirname + 'build' + 'index.html'));
+    const directory = path.join(__dirname + 'build' + 'index.html');
     res.sendFile(directory);
   });
 } else {
@@ -81,7 +81,7 @@ if (process.env.environment === 'PROD') {
   app.use(express.static('./public'));
 
   app.get('/*', function (req, res) {
-    const directory = (path.resolve(__dirname + 'public' + 'index.html'));
+    const directory = path.join(__dirname + 'public' + 'index.html');
     res.sendFile(directory);
   });
 }
