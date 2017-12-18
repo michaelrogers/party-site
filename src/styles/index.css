@@ -89,14 +89,13 @@ a:active {
 }
 .button-details {
   font-size: 20px !important;
-  color: rgba(78, 202, 189, 1) !important;
-  border: 2px solid rgba(78, 202, 189, 0.5) !important;
-  transform: color 1s, background 1s, border-color 1s;
+  color: rgb(63, 81, 181) !important;
+  border: 2px solid rgba(63, 81, 181, 0.5) !important;
+  transform: color 1s ease, background 1s ease, border-color 1s ease;
 }
 .button-details:hover {
   color: white !important;
-  background: rgba(78, 202, 189, 1) !important;
-  /* border-color: black !important; */
+  background: rgb(63, 81, 181) !important;
 }
 
 .drawer-item h3 {
@@ -110,7 +109,10 @@ a:active {
 .navbar-link.active span:first-child {
   border-bottom-color: turquoise;
 }
-
+.particle-canvas {
+  width: 100%;
+  height: 100%;
+}
 
 @keyframes animateTitleBlock {
   0% {
@@ -149,4 +151,14 @@ a:active {
 .details-wrapper {
   max-width: 300px;
   margin: 0 auto;
+  display: block;
+}
+
+.particle-transition {
+  background: rgba(0,0,0,0.8);
+  box-shadow:rgba(0, 0, 0, 0.9) 0px 0px 16px 15px;
+}
+
+footer {
+  height: 150px;
 }

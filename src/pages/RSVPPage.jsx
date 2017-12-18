@@ -8,7 +8,8 @@ import {
   Grid,
   Divider
 } from 'material-ui';
-import { CSSTransitionGroup } from 'react-transition-group';
+// import { CSSTransitionGroup } from 'react-transition-group';
+import CustomParticles from '../components/CustomParticles';
 
 
 import axios from 'axios';
@@ -35,6 +36,9 @@ export default class RSVPPage extends Component {
     if (number >= 0) {
       safeNumber = number;
     }
+    if (number > 6) {
+      safeNumber = this.state.number;
+    }
     this.setState({
       number: safeNumber
     });
@@ -47,7 +51,6 @@ export default class RSVPPage extends Component {
   }
   submitForm(e) {
     e.preventDefault();
-    console.log(this.state);
     const { name, email, number, note } = this.state;
     axios({
       method: 'POST',
@@ -65,6 +68,27 @@ export default class RSVPPage extends Component {
     }).catch(err => console.error(err));
 
   }
+  displayMessage() {
+    if (this.state.hasSubmitted) {
+      return (
+        <Typography type="body1" align="center">
+          Thanks for letting us know! If you entered your email, you will get a confirmation email shortly.
+        </Typography>
+      );
+    } else {
+      return (
+        <div>
+          <Typography type="body1" align="center">
+            We are so excited to celebrate this momentous occasion with you!
+          </Typography>
+          <Typography type="body1" align="center">
+            Are you in?
+          </Typography>
+        </div>
+      );
+    } 
+  }
+
   // handleChange = name => event => {
   //   this.setState({
   //     [name]: event.target.value,
@@ -73,18 +97,23 @@ export default class RSVPPage extends Component {
 
   render() {
     return (
-      <Grid container justify="center" spacing={24}>
-        <Grid item xs={10} lg={4}>
+      <Grid container justify="center">
+        <CustomParticles/>
+        <Grid item xs={10} sm={8} md={6} lg={4}>
           <Grid>
-            <Typography type="title" className="page-header" align="center">RSVP</Typography>
+            <div className="particle-transition">
+              <Typography type="title" className="page-header" align="center">RSVP</Typography>
+              <br/>
+              <Divider className="divider" />
+              <br/>
+              <br/>
+              <div>
+                {this.displayMessage()}
+              </div>
+            </div>
             <br/>
-            <Divider className="divider" />
-            <br/>
-            <br/>
-            <Typography type="subheading" align="center">
-              { this.state.hasSubmitted ? 'Thanks for letting us know! If you entered your email, you will get a confirmation email shortly. Feel free to share the party info with friends!' : 'We are so excited to celebrate this momentous occasion! Are you in?' }
-            </Typography>
-            <br/>
+            
+            
             <br/>
             <br/>
             <Card style={{display: this.state.hasSubmitted ? 'none' : 'block' }}>
@@ -135,7 +164,7 @@ export default class RSVPPage extends Component {
                   /><br/>
                   <br/>
                   <div style={{textAlign: 'center'}}>
-                    <Button type="submit" >Send Response</Button>
+                    <Button style={{border: '1px solid white'}} type="submit" >Send Response</Button>
                   </div>
                 </form>
               </CardContent>

@@ -4,6 +4,19 @@ import classNames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
 
+import alex from '../assets/partypeople/alex.jpg';
+import amanda from '../assets/partypeople/amanda.jpg';
+import chad from '../assets/partypeople/chad.jpg';
+import doug from '../assets/partypeople/doug.jpg';
+import greg from '../assets/partypeople/greg.jpg';
+import mara from '../assets/partypeople/mara.jpg';
+import megan from '../assets/partypeople/megan.jpg';
+import minhthy from '../assets/partypeople/minhthy.jpg';
+import renee from '../assets/partypeople/renee.jpg';
+import stephanie from '../assets/partypeople/stephanie.jpg';
+import stephen from '../assets/partypeople/stephen.jpg';
+import trey from '../assets/partypeople/trey.jpg';
+
 const styles = {
   row: {
     display: 'flex',
@@ -24,52 +37,51 @@ const styles = {
 const avatarData = [
   {
     name: 'Amanda Penney',
-    src: '/images/partypeople/amanda.jpg'
+    src: amanda
   },
   {
     name: 'Mara Castro',
-    src: '/images/partypeople/mara.jpg'
+    src: mara
   },
   {
     name: 'Megan Irvin',
-    src: '/images/partypeople/megan.jpg'
+    src: megan
   },
   {
     name: 'Minhthy Vu',
-    src: '/images/partypeople/minhthy.jpg'
+    src: minhthy
   },
   {
     name: 'Renee Fiala',
-    src: '/images/partypeople/renee.jpg'
+    src: renee
   },
   {
     name: 'Stephanie Garman',
-    src: '/images/partypeople/stephanie.jpg'
+    src: stephanie
   },
   {
     name: 'Alex Steimle',
-    src: '/images/partypeople/alex.jpg',
-    color: ''
+    src: alex
   },
   {
     name: 'Chad Lorance',
-    src: '/images/partypeople/chad.jpg'
+    src: chad
   },
   {
     name: 'Douglas Steimle',
-    src: '/images/partypeople/doug.jpg'
+    src: doug
   },
   {
     name: 'Greg Smith',
-    src: '/images/partypeople/greg.jpg'
+    src: greg
   },
   {
     name: 'Stephen Infanger',
-    src: '/images/partypeople/stephen.jpg'
+    src: stephen
   },
   {
     name: 'Trey Bothe',
-    src: '/images/partypeople/trey.jpg'
+    src: trey
   }
 ];
 

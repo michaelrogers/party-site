@@ -21,7 +21,7 @@ const styles = {
     zIndex: -1
   },
   titleText: {
-    color: 'rgb(78, 202, 189)',
+    color: '#3f51b5',
     fontWeight: 600,
     textShadow: '1px 2px 2px rgba(43, 109, 101, 0.3)'
   },
@@ -39,19 +39,19 @@ export default class HomePage extends Component {
         <Grid container justify="center" alignItems="center" spacing={24} >
           <Grid item xs={12} lg={8}>
             <div style={styles.titleBlock} className="title-block">
-              <Typography style={{fontSize: '30px', ...styles.titleText}}>
+              <Typography style={{fontSize: '2em', ...styles.titleText}}>
                 MICHAEL &amp; LEIGH
               </Typography>
-              <Typography style={{fontSize: '46px', ...styles.titleText}}>
+              <Typography style={{fontSize: '3.1em', ...styles.titleText}}>
                 INVITE YOU
               </Typography>
-              <Typography style={{fontSize: '27px', ...styles.titleText}}>
+              <Typography style={{fontSize: '1.8em', ...styles.titleText}}>
                 TO THEIR WEDDING
               </Typography>
-              <Typography style={{fontSize: '38px', ...styles.titleText}}>
+              <Typography style={{fontSize: '2.55em', ...styles.titleText}}>
                 CELEBRATION
               </Typography>
-              <Typography style={{fontSize: '29.5px', ...styles.titleText}}>
+              <Typography style={{fontSize: '1.97em', ...styles.titleText}}>
                 JANUARY 20, 2018
               </Typography>
               <br/>
