@@ -69,16 +69,15 @@ app.use(function(req, res, next) {
 // Send the react dist to client
 if (process.env.environment === 'PROD') {
   console.log('Info: Prod mode');
-  app.use(express.static('./build'));
-  // app.use(express.static(path.join(__dirname, 'client/build')));
-
+  app.use(express.static(path.join(__dirname, 'build')));
+  
   app.get('/*', function (req, res) {
     const directory = path.join(__dirname + 'build' + 'index.html');
     res.sendFile(directory);
   });
 } else {
   console.log('Info: Dev mode');
-  app.use(express.static('./public'));
+  app.use(express.static(path.join(__dirname, 'public')));
 
   app.get('/*', function (req, res) {
     const directory = path.join(__dirname + 'public' + 'index.html');
