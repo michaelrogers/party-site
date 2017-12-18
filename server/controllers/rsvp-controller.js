@@ -24,20 +24,26 @@ const confirmRSVPEmail = (guestName, numberAttending, _isAttending, emailAddress
     from: 'MichaelandLeigh <mail@michaelandleigh.com>',
     to: emailAddress,
     subject: "We've received your RSVP",
-    // html: { path: '../views/emails/alert.html' }
     html: `
       <p>Hi ${guestName},</p>
       <p>Thanks for RSVP'ing, we have you down for ${numberAttending}. Please let us know if your plans change.</p>
       <br/>
-      <h4>Event Date</h4>
-      <p>January 20th, 2018</p>
-      <p>7:00 PM - 12:01AM</p>
+      <div>EVENT DATE</div>
+      <div>
+        <div>January 20th, 2018</div>
+        <div>7:00 PM</div>
+      </div>
       <br/>
-      <h4>Location</h4>
-      <p><em>Sharespace Warehouse</em></p>
-      <p>2203 Preston Street</p>
-      <p>Houston, TX</p>
-      `
+      <div>LOCATION</div>
+      <div>
+        <div><em>Sharespace Warehouse</em></div>
+        <div>2203 Preston Street</div>
+        <div>Houston, TX</div>
+      </div>
+      <br/>
+      <p>Can't wait to see you there,</p>
+      <p>Michael & Leigh</p>
+    `
   };
 };
 
