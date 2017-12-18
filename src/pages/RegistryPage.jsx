@@ -36,7 +36,12 @@ export default class GiftsPage extends Component {
 
           <br/>
           <div style={{textAlign: 'center'}}>
-            <Button target="_blank" rel="noopener" className="button-details" href="https://www.blueprintregistry.com/registry/LeighandMichael01.13.18">Visit the registry</Button>
+            <a target="_blank" rel="noopener" href="https://www.blueprintregistry.com/registry/LeighandMichael01.13.18">
+              <Button className="button-details" >
+              Visit the registry
+              </Button>
+            </a>
+
           </div>
         </Grid>
       </Grid>

@@ -56,7 +56,7 @@ export default class App extends Component {
               in={true}
               appear={false}
               exit={false}
-              timeout={{exit: 0, enter: 300}}
+              timeout={{exit: 0, enter: 600}}
               key={this.props.location.key}
             >
               <Switch location={this.props.location}>

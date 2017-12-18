@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 // import Button from 'material-ui/Button';
 // import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Card, { 
+  // CardActions,
+  CardContent,
+  // CardMedia
+} from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
 export default class UpNext extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   render() {
     return (

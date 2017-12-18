@@ -62,6 +62,7 @@ module.exports = {
     });
     console.log(newRSVP);
     try {
+      throw new Error('Test error')
       await newRSVP.save();
       await mailgun.messages().send(
         newRSVPEmail(guestName, numberAttending, isAttending));

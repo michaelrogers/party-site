@@ -24,11 +24,13 @@ export default class RSVPPage extends Component {
       email: '',
       number: 1,
       note: '',
-      hasSubmitted: false
+      hasSubmitted: false,
+      wasError: false
     };
     this.handleNumberChange = this.handleNumberChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.displayError = this.displayError.bind(this);
   }
   handleNumberChange(event) {
     const number = parseInt(event.target.value, 10);
@@ -64,8 +66,11 @@ export default class RSVPPage extends Component {
       }
     }).then(data => {
       this.setState({hasSubmitted: true});
-      console.log('Great success', data);
-    }).catch(err => console.error(err));
+      console.log('Great success');
+    }).catch(err => {
+      this.setState({wasError: true});
+      console.log(err, this.state.wasError);
+    });
 
   }
   displayMessage() {
@@ -85,6 +90,18 @@ export default class RSVPPage extends Component {
             Are you in?
           </Typography>
         </div>
+      );
+    } 
+  }
+
+  displayError() {
+    if (this.state.wasError) {
+      console.log('errorText')
+      return (
+        <Typography type="body2" align="center" style={{color: 
+          'red'}}>
+          There was an error. Please try again later.
+        </Typography>
       );
     } 
   }
@@ -112,6 +129,8 @@ export default class RSVPPage extends Component {
             <br/>
             <Card style={{display: this.state.hasSubmitted ? 'none' : 'block' }}>
               <CardContent>
+                {this.displayError()}
+     
                 <form style={{display: this.state.hasSubmitted ? 'none' : 'block' }} onSubmit={this.submitForm}>
                   <TextField
                     id="name"

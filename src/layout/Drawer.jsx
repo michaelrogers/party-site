@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Drawer, Divider } from 'material-ui';
 
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, {
+  ListItem,
+  // ListItemIcon,
+  ListItemText
+} from 'material-ui/List';
 // import InboxIcon from 'material-ui-icons/Inbox';
 // import DraftsIcon from 'material-ui-icons/Drafts';
-const styles = {
+// const styles = {
 
-};
+// };
 
 
 export default class DrawerCustom extends Component {

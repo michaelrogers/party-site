@@ -80,6 +80,7 @@ export default class DetailsPage extends Component {
                   
                   <div style={{ textAlign: 'center', display: 'block', width: '100%' }}>
                     <iframe style={{ backgroundColor: 'darkgrey', width: '100%' }}
+                      title="Sharespace Location"
                       // width="600"
                       height="250"
                       src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCaa4FCPfuZF7lLmZyTz3Rz4n7tnl-4-N0&q=Sharespace+Warehouse,2203+Preston+Street,Houston+TX" allowFullScreen>
