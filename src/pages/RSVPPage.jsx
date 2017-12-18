@@ -64,12 +64,11 @@ export default class RSVPPage extends Component {
         number,
         note
       }
-    }).then(data => {
+    }).then(_data => {
       this.setState({hasSubmitted: true});
       console.log('Great success');
-    }).catch(err => {
+    }).catch(_err => {
       this.setState({wasError: true});
-      console.log(err, this.state.wasError);
     });
 
   }
@@ -96,7 +95,6 @@ export default class RSVPPage extends Component {
 
   displayError() {
     if (this.state.wasError) {
-      console.log('errorText')
       return (
         <Typography type="body2" align="center" style={{color: 
           'red'}}>
@@ -129,8 +127,6 @@ export default class RSVPPage extends Component {
             <br/>
             <Card style={{display: this.state.hasSubmitted ? 'none' : 'block' }}>
               <CardContent>
-                {this.displayError()}
-     
                 <form style={{display: this.state.hasSubmitted ? 'none' : 'block' }} onSubmit={this.submitForm}>
                   <TextField
                     id="name"
@@ -175,7 +171,9 @@ export default class RSVPPage extends Component {
                     fullWidth
                     margin="normal"
                   /><br/>
+                  {this.displayError()}
                   <br/>
+                  
                   <div style={{textAlign: 'center'}}>
                     <Button style={{border: '1px solid white'}} type="submit" >Send Response</Button>
                   </div>
