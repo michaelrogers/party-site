@@ -10,7 +10,9 @@ import IconButton from 'material-ui/IconButton';
 import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
 import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import SkipNextIcon from 'material-ui-icons/SkipNext';
-const appRoot = 'http://localhost';
+const path = require('path');
+const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
+
 
 const styles = theme => ({
   card: {
@@ -22,6 +24,10 @@ const styles = theme => ({
   },
   content: {
     flex: '1 0 auto',
+  },
+  albumCover: {
+    borderRadius: '2px 2px 0 0',
+    height: 440
   },
   cover: {
     width: 151,
@@ -47,14 +53,6 @@ export default class MusicPlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // current: this.props.current,
-      // current: {
-      //   title: 'Citizen',
-      //   artist: 'Broken Bells',
-      //   album: 'After the Disco',
-      //   imagery: '',
-      //   duration: 292066
-      // },
       progress: 0,
       elapsed: 0
     };
@@ -62,9 +60,7 @@ export default class MusicPlayer extends Component {
     this.skip = this.skip.bind(this);
     this.unskip = this.unskip.bind(this);
     this.fetchCurrentSong = this.fetchCurrentSong.bind(this);
-    
   }
-
   timer: number;
 
   componentDidMount() {
@@ -82,19 +78,21 @@ export default class MusicPlayer extends Component {
     clearInterval(this.timer);
   }
   fetchCurrentSong = () => {
-    fetch(appRoot + '/spotify/player/current', {
+    fetch(publicUrl + '/spotify/player/current', {
       credentials: 'include',
       mode: 'cors',
     }).then((response) => console.log(response.body));
   }
   skip = () => {
-    fetch(appRoot + '/spotify/controls/skip', {
+    fetch(publicUrl + '/spotify/controls/skip', {
       credentials: 'include',
       mode: 'no-cors',
     }).then((response) => console.log(response));
   }
   unskip = () => {
-    fetch(appRoot + '/spotify/controls/unskip', {
+    const endpoint = publicUrl + '/spotify/controls/unskip';
+    console.log(endpoint)
+    fetch(endpoint, {
       credentials: 'include',
       mode: 'no-cors',
     }).then((response) => console.log(response));
@@ -122,9 +120,10 @@ export default class MusicPlayer extends Component {
     return (
       <Card>
         <CardMedia
+          style={styles.albumCover}
           image={this.props.current.imagery}
           title={this.props.current.album}
-          style={{height:'640px'}}
+          style={{height:'440px', borderRadius: '2px 2px 0 0'}}
         />
         <CardContent>
           <Typography type="caption" component="p">
@@ -152,9 +151,11 @@ export default class MusicPlayer extends Component {
         <IconButton aria-label="Previous" onClick={this.unskip}>
             <SkipPreviousIcon />
           </IconButton>
+          {/*
           <IconButton aria-label="Play/pause">
             <PlayArrowIcon  />
           </IconButton>
+          */}
           <IconButton aria-label="Next" onClick={this.skip}>
             <SkipNextIcon />
           </IconButton>

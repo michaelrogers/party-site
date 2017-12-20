@@ -65,6 +65,16 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
+
+const routes = require('./server/routes');
+
+//Iterate through the routes
+for (let route in routes) {
+  app.use(route, routes[route]);
+}
+
+
+
 // Send the react dist to client
 if (process.env.environment === 'PROD') {
   console.log('Info: Prod mode');
@@ -86,12 +96,6 @@ if (process.env.environment === 'PROD') {
   });
 }
 
-const routes = require('./server/routes');
-
-//Iterate through the routes
-for (let route in routes) {
-  app.use(route, routes[route]);
-}
 
 
 

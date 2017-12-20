@@ -1,12 +1,21 @@
 const request = require('request');
+const rp = require('request-promise');
+const path = require('path');
 const querystring = require('querystring');
 const nconf = require('nconf');
 const axios = require('axios');
 
+const queueId = '4mdBCkYnWOeIGyjttF9Ha4';
+const partyPlaylistId = '2v7briJjtSi4zQeNgChn3I';
+
+
 const client_id = process.env.spotifyClientId || nconf.get('server:api:spotify:clientId');
 const client_secret = process.env.spotifyClientSecret || nconf.get('server:api:spotify:clientSecret');
+const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
+const user_id = process.env.spotify_user_id || nconf.get('server:api:spotify:user_id');
 
-const redirect_uri = 'http://localhost/spotify/callback'; // Your redirect uri
+const redirect_uri = publicUrl + '/spotify/callback'; // Your redirect uri
+
 const apiBase = 'https://api.spotify.com/v1';
 const accountBase = 'https://accounts.spotify.com';
 
@@ -39,42 +48,32 @@ const generateRandomString = function(length) {
 
 const stateKey = 'spotify_auth_state';
 //Shared between controllers
-let access_token = null;
-let refresh_token = null;
-
+// let access_token = null;
+// let refresh_token = null;
 
 // const state = generateRandomString(16);
 // axios.get(accountBase + '/authorize?' +
-// querystring.stringify({
-//   response_type: 'code',
-//   client_id: client_id,
-//   scope: scope,
-//   redirect_uri: redirect_uri,
-//   state: state
-// })).then((response) => {
-//   console.log(response)
+//   querystring.stringify({
+//     response_type: 'code',
+//     client_id: client_id,
+//     scope: scope,
+//     redirect_uri: redirect_uri,
+//     state: state
+//   })).then((response) => {
   
-//   const authOptions = {
-//     url: accountBase + '/api/token',
-//     form: {
-//       code: code,
-//       redirect_uri: redirect_uri,
-//       grant_type: 'authorization_code'
-//     },
-//     headers: {
-//       'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-//     },
-//     json: true
-//   };
+//     const authOptions = {
+//       url: accountBase + '/api/token',
+//       form: {
+//         code: code,
+//         redirect_uri: redirect_uri,
+//         grant_type: 'authorization_code'
+//       },
+//       headers: {
+//         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+//       },
+//       json: true
+//     };
   
-//     request.post(authOptions, function(error, response, body) {
-//       console.log(body)
-//       if (!error && response.statusCode === 200) {
-//       access_token = body.access_token;
-//       refresh_token = body.refresh_token;
-//     }
-// });
-
 // });
 
 module.exports = {
@@ -91,14 +90,13 @@ module.exports = {
         state: state
       }));
   },
-  callback: function(req, res) {
+  callback: async function(req, res, next) {
     // your application requests refresh and access tokens
     // after checking the state parameter
     const code = req.query.code || null;
     const state = req.query.state || null;
-    console.log('Cookies!',req.cookies);
     const storedState = req.cookies ? req.cookies[stateKey] : null;
-    console.log('Debug', state, storedState);
+
     if (state === null || state !== storedState) {
       res.redirect('/#' +
         querystring.stringify({
@@ -106,8 +104,10 @@ module.exports = {
         }));
     } else {
       res.clearCookie(stateKey);
+      
       const authOptions = {
-        url: accountBase + '/api/token',
+        uri: accountBase + '/api/token',
+        method: 'POST',
         form: {
           code: code,
           redirect_uri: redirect_uri,
@@ -118,27 +118,17 @@ module.exports = {
         },
         json: true
       };
-  
-      request.post(authOptions, function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-          access_token = body.access_token;
-          refresh_token = body.refresh_token;
-          // const { access_token, refresh_token} = body;
-          // use the access token to access the Spotify Web API
-          // we can also pass the token to the browser to make requests from there
-          // res.redirect('/#' +
-          //   querystring.stringify({
-          //     access_token: access_token,
-          //     refresh_token: refresh_token
-          //   }));
-          res.send('Ready to rock!');
-        } else {
-          res.redirect('/#' +
-            querystring.stringify({
-              error: 'invalid_token'
-            }));
-        }
-      });
+      try {
+        const responseBody = await rp(authOptions);
+        access_token = responseBody.access_token;
+        refresh_token = responseBody.refresh_token;
+        await module.exports.fetchAllPlaylists(req, res, next);
+        res.send('Ready to rock!');
+        
+      } catch(e) {
+        res.redirect('/#' +
+        querystring.stringify({error: 'invalid_token'}));
+      }
     }
   },
   refreshToken: function(req, res) {
@@ -164,90 +154,107 @@ module.exports = {
     });
   },
 
-  skip: function(req, res) {
-    // const options = {...requestOptions};
+  skip: async function(req, res, next) {
     const options = {
-      url: apiBase + '/me/player/next',
+      uri: apiBase + '/me/player/next',
+      method: 'POST',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.post(options, function(error, response, body) {
-      if (!error) {
-        res.send(body);
-      } else {
-        console.log(error);
+    try {
+      const response = await rp(options);
+      res.send(response);
+      } catch(e) {
+        next(e);
       }
-    });
-
   },
-  unskip: function(req, res) {
+  unskip: async function(req, res) {
     const options = {
-      url: apiBase + '/me/player/previous',
+      uri: apiBase + '/me/player/previous',
+      method: 'POST',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.post(options, function(error, response, body) {
-      if (!error) {
-        res.send(body);
-      } else { 
-        console.log(error);
+    try {
+      const response = await rp(options);
+      res.send(response);
+      } catch(e) {
+        next(e);
       }
-    });
   },
-  current: function(req, res) {
+  current: async function(req, res) {
+    const url = (apiBase + '/me/player');
     const options = {
-      url: apiBase + '/me/player',
+      uri: url,
+      method: 'GET',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.get(options, function(error, response, body) {
-    // const response = await request.get(options);
-    // const json = await response.json();
+    try {
+      const body = await rp(body);
       res.send(body);
-    });
+    } catch(e) {
+      next(e);
+    }
   },
-  currentSong: function(req, res) {
+  currentSong: async function(req, res) {
     const options = {
-      url: apiBase + '/me/player/currently-playing',
+      uri: apiBase + '/me/player/currently-playing',
+      method: 'GET',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.get(options, function(error, response, body) {
+    try {
+      const body = await rp(options);
       res.send(body);
-    });
+    } catch(e) {
+      next(e);
+    }
   },
 
-  fetchPlaylist: function(req, res) {
+  fetchPlaylist: async function(req, res) {
     const playlistId = req.params.playlistid;
     const options = {
-      url: `${apiBase}/users/coverfire/playlists/${playlistId}/tracks`,
+      uri: `${apiBase}/users/${user_id}/playlists/${playlistId}/tracks`,
+      method: 'GET',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.get(options, function(error, response, body) {
+    try {
+      const body = await rp(options);
       res.send(body);
-    });
+    } catch(e) {
+      next(e);
+    }
   },
 
-  fetchAllPlaylists: function(req, res) {
+  fetchAllPlaylists: async function(req, res, next) {
     const options = {
-      url: apiBase + '/me/playlists/',
+      uri: apiBase + '/me/playlists/',
+      method: 'GET',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-    request.get(options, function(error, response, body) {
+    try {
+      const body = await rp(options) 
       res.send(body);
-    });
+    } catch(e) {
+      next(e);
+    }
   },
-  fetchUserProfile: function(req, res) {
+  fetchUserProfile: async function(req, res) {
     const options = {
-      url: apiBase +  '/me/',
+      uri: apiBase + '/me/',
       headers: { 'Authorization': 'Bearer ' + access_token },
+      method: 'GET',
       json: true
     };
-    request.get(options, function(error, response, body) {
+    try {
+      const body = await rp(options)
       res.send(body);
-    });
-  }
+    } catch(e) {
+      next(e);
+    }
+  },
 
 };

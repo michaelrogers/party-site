@@ -11,9 +11,12 @@ import Grid from 'material-ui/Grid';
 //     transports: ['websocket'],
 //     path: '/socket.io'
 //   });
+
 import io from 'socket.io-client';
+
+const publicUrl = process.env.PUBLIC_URL || 'http://localhost/';
 const socket = io.connect(
-  'http://localhost',
+  publicUrl,
   {
     reconnect: true,
     transports: ['websocket'],
@@ -32,16 +35,20 @@ export default class MusicPage extends Component {
         imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
         duration: 292066
       },
+      songChoices: [],
       elapsed: 0
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
+    this.updateSongChoices = this.updateSongChoices.bind(this);
     this.updateUserCount = this.updateUserCount.bind(this);
   }
   componentWillUnMount() {
     socket.off('player:current');
+    socket.off('player:song-choices');
   }
   componentDidMount() {
     socket.on('player:current', this.updateCurrentSong);
+    socket.on('player:song-choices', this.updateSongChoices);
     socket.on('user:count', this.updateUserCount);
   }
   updateCurrentSong(data) {
@@ -51,23 +58,31 @@ export default class MusicPage extends Component {
       elapsed: data.elapsed
     });
   }
-  updateUserCount(data) {
+  updateSongChoices(data) {
     console.log(data);
+    this.setState({
+      songChoices: data
+    });
+  }
+  updateUserCount(data) {
+    console.log('Current users', data);
   }
 
   render() {
     return (
       <div>
-        <br/>
-        <Grid item xs={12} lg={6}>
-          <MusicPlayer
-            current={this.state.current}
-            elapsed={this.state.elapsed}
-          />
-        </Grid>
-        <Grid item xs={12} lg={6}>
-          <br/>
-          <UpNext/>
+        <Grid container justify="center">
+          <Grid item xs={12} lg={4}>
+            <MusicPlayer
+              current={this.state.current}
+              elapsed={this.state.elapsed}
+            />
+          </Grid>
+          <Grid item xs={12} lg={6}>
+            <UpNext
+              songChoices={this.state.songChoices}
+            />
+          </Grid>
         </Grid>
       </div>
     );

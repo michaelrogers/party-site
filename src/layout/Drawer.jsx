@@ -62,6 +62,11 @@ export default class DrawerCustom extends Component {
                   <ListItemText className="drawer-item" primary="RSVP" />
                 </ListItem>
               </Link>
+              <Link to="/music">
+                <ListItem button>
+                  <ListItemText className="drawer-item" primary="Music" />
+                </ListItem>
+              </Link>
             </List>
             <Divider />
             <List></List>

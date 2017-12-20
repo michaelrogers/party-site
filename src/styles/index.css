@@ -30,7 +30,7 @@ p {
 
 main h1,
 main h2 {
-  margin-bottom: 1em !important;
+  /* margin-bottom: 1em !important; */
 }
 
 .fade {
@@ -170,3 +170,7 @@ a:active {
 footer {
   height: 150px;
 }
+
+/* .song-choice {
+  margin-bottom: 5px;
+} */
