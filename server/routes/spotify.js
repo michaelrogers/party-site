@@ -13,7 +13,9 @@ router.get('/controls/skip', spotifyController.skip);
 router.get('/controls/unskip', spotifyController.unskip);
 router.get('/player/current', spotifyController.current);
 router.get('/player/song', spotifyController.currentSong);
-router.get('/playlist/:playlistid/tracks', spotifyController.fetchPlaylist);
+router.get('/playlist/:playlistid/tracks', spotifyController.fetchPlaylistTracks);
+router.post('/queue/newupnext', spotifyController.newUpNext);
+router.post('/queue/:trackuri', spotifyController.addTrackToQueue);
 router.get('/playlist/all', spotifyController.fetchAllPlaylists);
 
 

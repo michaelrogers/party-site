@@ -59,18 +59,18 @@ function MediaControlCard(props) {
       <Card className={classes.card}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
-            <Typography type="headline">{props.song.title}</Typography>
+            <Typography type="headline">{props.song ? props.song.title : ''}</Typography>
             <Typography type="subheading" color="secondary">
-              {props.song.artist}
+              {props.song ? props.song.artist : ''}
             </Typography>
           </CardContent>
         </div>
         <div className={classes.controls}>
         </div>
         <CardMedia
-        className={classes.cover}
-        image={props.song.imagery}
-        title={props.song.album}
+          className={classes.cover}
+          image={props.song ? props.song.imagery : ''}
+          title={props.song ? props.song.album : ''}
         />
         <LinearProgress className={classes.linearProgress} color="accent" mode="determinate" value={Math.random() * 100} />
         </Card>

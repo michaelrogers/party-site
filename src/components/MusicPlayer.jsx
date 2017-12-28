@@ -123,7 +123,7 @@ export default class MusicPlayer extends Component {
           style={styles.albumCover}
           image={this.props.current.imagery}
           title={this.props.current.album}
-          style={{height:'440px', borderRadius: '2px 2px 0 0'}}
+          style={{height:'470px', borderRadius: '2px 2px 0 0'}}
         />
         <CardContent>
           <Typography type="caption" component="p">

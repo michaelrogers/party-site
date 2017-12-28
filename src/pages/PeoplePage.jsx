@@ -17,7 +17,7 @@ export default class PeoplePage extends Component {
                 <Typography type="title" className="page-header" align="center">PARTYMAIDS &amp; PARTYMEN</Typography>
               </div>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={10} lg={10} xl={10}>
               <Divider className="divider"/>
               <br/>
               <div className="particle-transition">

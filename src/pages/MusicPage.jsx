@@ -15,13 +15,11 @@ import Grid from 'material-ui/Grid';
 import io from 'socket.io-client';
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost/';
-const socket = io.connect(
-  publicUrl,
-  {
-    reconnect: true,
-    transports: ['websocket'],
-    // path: '/socket.io'
-  });
+const socket = io.connect(publicUrl, {
+  reconnect: true,
+  transports: ['websocket'],
+  // path: '/socket.io'
+});
 
 
 export default class MusicPage extends Component {

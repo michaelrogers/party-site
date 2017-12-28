@@ -3,16 +3,18 @@ const rp = require('request-promise');
 const path = require('path');
 const querystring = require('querystring');
 const nconf = require('nconf');
-const axios = require('axios');
-
-const queueId = '4mdBCkYnWOeIGyjttF9Ha4';
-const partyPlaylistId = '2v7briJjtSi4zQeNgChn3I';
-
+// const axios = require('axios');
 
 const client_id = process.env.spotifyClientId || nconf.get('server:api:spotify:clientId');
 const client_secret = process.env.spotifyClientSecret || nconf.get('server:api:spotify:clientSecret');
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 const user_id = process.env.spotify_user_id || nconf.get('server:api:spotify:user_id');
+
+// Queue should precede list
+const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
+let playlistTracks = [];
+const queueid = process.env.queueid || nconf.get(('server:api:spotify:queueid'));
+// let upNext = [];
 
 const redirect_uri = publicUrl + '/spotify/callback'; // Your redirect uri
 
@@ -28,53 +30,38 @@ const authorizationScope = [
   'user-modify-playback-state',
   'user-library-read',
   'playlist-modify-private',
+  'playlist-modify-public',
 ];
 const scope = authorizationScope.join(' ');
+const stateKey = 'spotify_auth_state';
 
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
-const generateRandomString = function(length) {
+const generateRandomString = length => {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
   for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+    text += possible.charAt(
+      Math.floor(
+        Math.random() * possible.length
+      )
+    );
   }
   return text;
 };
 
-const stateKey = 'spotify_auth_state';
-//Shared between controllers
-// let access_token = null;
-// let refresh_token = null;
+const selectNextOptions = () => {
+  return playlistTracks.map(
+    playlist => {
+      const index = Math.floor(Math.random() * playlist.length);
+      return playlist.splice(index, 1)[0];
+    });
+};
 
-// const state = generateRandomString(16);
-// axios.get(accountBase + '/authorize?' +
-//   querystring.stringify({
-//     response_type: 'code',
-//     client_id: client_id,
-//     scope: scope,
-//     redirect_uri: redirect_uri,
-//     state: state
-//   })).then((response) => {
-  
-//     const authOptions = {
-//       url: accountBase + '/api/token',
-//       form: {
-//         code: code,
-//         redirect_uri: redirect_uri,
-//         grant_type: 'authorization_code'
-//       },
-//       headers: {
-//         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-//       },
-//       json: true
-//     };
-  
-// });
+
 
 module.exports = {
   login: function(req, res) {
@@ -122,12 +109,21 @@ module.exports = {
         const responseBody = await rp(authOptions);
         access_token = responseBody.access_token;
         refresh_token = responseBody.refresh_token;
-        await module.exports.fetchAllPlaylists(req, res, next);
+        const promises = playlists.map(playlist => {
+            return rp({
+              uri: `${publicUrl}/spotify/playlist/${playlist.playlistid}/tracks`,
+              json: true,
+              method: 'GET'
+            });
+          });
+        
+        playlistTracks = await Promise.all(promises);
         res.send('Ready to rock!');
         
       } catch(e) {
-        res.redirect('/#' +
-        querystring.stringify({error: 'invalid_token'}));
+        next(e);
+        // res.redirect('/#' +
+        // querystring.stringify({error: 'invalid_token'}));
       }
     }
   },
@@ -155,56 +151,59 @@ module.exports = {
   },
 
   skip: async function(req, res, next) {
-    const options = {
-      uri: apiBase + '/me/player/next',
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
     try {
+      const options = {
+        uri: apiBase + '/me/player/next',
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
       const response = await rp(options);
       res.send(response);
       } catch(e) {
         next(e);
       }
   },
-  unskip: async function(req, res) {
-    const options = {
-      uri: apiBase + '/me/player/previous',
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
+  unskip: async function(req, res, next) {
     try {
+      const options = {
+        uri: apiBase + '/me/player/previous',
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
       const response = await rp(options);
       res.send(response);
       } catch(e) {
         next(e);
       }
   },
-  current: async function(req, res) {
-    const url = (apiBase + '/me/player');
-    const options = {
-      uri: url,
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
+  current: async function(req, res, next) {
     try {
-      const body = await rp(body);
+      const url = (apiBase + '/me/player');
+      const options = {
+        uri: url,
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
+      const body = await rp(options);
       res.send(body);
     } catch(e) {
       next(e);
     }
   },
-  currentSong: async function(req, res) {
-    const options = {
-      uri: apiBase + '/me/player/currently-playing',
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
+  newUpNext: function(req, res, next) {
+    res.send(selectNextOptions());
+  },
+  currentSong: async function(req, res, next) {
     try {
+      const options = {
+        uri: apiBase + '/me/player/currently-playing',
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
       const body = await rp(options);
       res.send(body);
     } catch(e) {
@@ -212,37 +211,70 @@ module.exports = {
     }
   },
 
-  fetchPlaylist: async function(req, res) {
-    const playlistId = req.params.playlistid;
-    const options = {
-      uri: `${apiBase}/users/${user_id}/playlists/${playlistId}/tracks`,
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
+  fetchPlaylistTracks: async function(req, res, next) {
     try {
+      const playlistId = req.params.playlistid;
+      const options = {
+        uri: `${apiBase}/users/${user_id}/playlists/${playlistId}/tracks`,
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
       const body = await rp(options);
+      const tracks = body.items.map(item => {
+          return {
+            title: item.track.name || '',
+            id: item.track.id || '',
+            uri: item.track.uri || '',
+            artist: item.track.artists.map(a => a.name).join(', ') || '',
+            album: item.track.album.name || '',
+            imagery: item.track.album.images[0].url || '',
+            duration: item.track.duration_ms || '',
+          }
+        });
+      res.send(tracks);
+    } catch(e) {
+      next(e);
+    }
+  },
+  addTrackToQueue: async function(req, res, next) {
+    try {
+      const trackuri = req.params.trackuri;
+      const options = {
+        uri: apiBase + `/users/${user_id}/playlists/${queueid}/tracks?uris=${trackuri}`,
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
+      const body = await rp(options);
+
       res.send(body);
     } catch(e) {
       next(e);
     }
   },
-
   fetchAllPlaylists: async function(req, res, next) {
-    const options = {
-      uri: apiBase + '/me/playlists/',
-      method: 'GET',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
     try {
-      const body = await rp(options) 
-      res.send(body);
+      const options = {
+        uri: apiBase + '/me/playlists/',
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
+      const body = await rp(options);
+      const playlists = body.items.map(item => {
+        return {
+          name: item.name,
+          playlistid: item.id
+        };
+
+      });
+      res.send(playlists);
     } catch(e) {
       next(e);
     }
   },
-  fetchUserProfile: async function(req, res) {
+  fetchUserProfile: async function(req, res, next) {
     const options = {
       uri: apiBase + '/me/',
       headers: { 'Authorization': 'Bearer ' + access_token },

@@ -61,6 +61,9 @@ function ButtonAppBar(props) {
             <Link className="navbar-link" to="/rsvp">
               <Button className={classes.navButton}>RSVP</Button>
             </Link>
+            <Link className="navbar-link" to="/music">
+              <Button className={classes.navButton}>Music</Button>
+            </Link>
           </Hidden>
         </Toolbar>
       </AppBar>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 // import Button from 'material-ui/Button';
 // import Grid from 'material-ui/Grid';
 import Card, { 
@@ -6,12 +7,27 @@ import Card, {
   CardContent,
   // CardMedia
 } from 'material-ui/Card';
+
 import Typography from 'material-ui/Typography';
 import SongChoice from './SongChoice';
+const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 export default class UpNext extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+    // this.addToQueue = this.addToQueue.bind(this);
+    this.voteForSong = this.voteForSong.bind(this);
+  }
+
+  addToQueue(trackuri) {
+    const url = publicUrl + '/spotify/queue/' + trackuri;
+    console.log('addToQueue', trackuri, url);
+    axios.post(url).then(response => {
+
+    });
+  }
+  voteForSong(trackuri) {
+    console.log('voteforsong');
+  }
 
 
   populateSongChoices() {
@@ -19,7 +35,8 @@ export default class UpNext extends Component {
       const songChoices = this.props.songChoices || [];
       return songChoices.map((choice, i) => {
         return (
-          <SongChoice key={i} song={choice} />
+          <SongChoice key={i}  song={choice} onClick={this.voteForSong} 
+          />
         );
       });
     }

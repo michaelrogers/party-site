@@ -84,11 +84,23 @@ exports = module.exports = function(server) {
               album: response.data.item.album.name
             }
           };
+          fetchNewUpNext();
           io.emit('player:current', currentSongData); 
           io.emit('player:song-choices', playlistData.songs); 
         }
       });
   };
+
+  const fetchNewUpNext = () => {
+    axios.post('/spotify/queue/newupnext')
+      .then(response => {
+        console.log('Response', response.data);
+        playlistData.songs = response.data;
+      });
+  };
+
+
+
   // Commented out
   setInterval(fetchCurrentSong, 10000);
 
@@ -100,9 +112,7 @@ exports = module.exports = function(server) {
     io.on('disconnect', socket => {
       io.emit('user:count', socket.server.engine.clientsCount);
     });
-    
     // socket.on('player:action', data => {
-    
     //   // io.emit('game:score', game.score);
     // });
   });
