@@ -91,7 +91,6 @@ export default class MusicPlayer extends Component {
   }
   unskip = () => {
     const endpoint = publicUrl + '/spotify/controls/unskip';
-    console.log(endpoint)
     fetch(endpoint, {
       credentials: 'include',
       mode: 'no-cors',
@@ -100,21 +99,16 @@ export default class MusicPlayer extends Component {
 
   progress = () => {
     const { progress, elapsed } = this.state;
-    // const { elapsed } = this.props;
     const newElapsed = parseInt(elapsed + 1000, 10);
     const trackDuration = this.props.current.duration;
     const percentProgress = Math.floor(
-      (
-        1 - (trackDuration - newElapsed) / trackDuration
-      )  * 100
+      (1 - (trackDuration - newElapsed) / trackDuration)  * 100
     ); 
-      this.setState({
-        elapsed: newElapsed,
-        progress: percentProgress 
-      });
+    this.setState({
+      elapsed: newElapsed <= trackDuration ? newElapsed : trackDuration,
+      progress: percentProgress 
+    });
   };
-
-
 
   render() {
     return (
@@ -140,10 +134,10 @@ export default class MusicPlayer extends Component {
           </Typography>
           <br/>
           <LinearProgress color="accent" mode="determinate" value={this.state.progress} />
-          <Typography component="span" alight="left">
+          <Typography component="span" alight="left" style={{display: 'inline-block'}}>
             {moment.utc(this.state.elapsed).format('m:ss')}
           </Typography>
-          <Typography component="span" align="right">
+          <Typography component="span" align="right" style={{display: 'inline-block', float: 'right'}}>
             {moment.utc(this.props.current.duration).format('m:ss')}
           </Typography>
         </CardContent>

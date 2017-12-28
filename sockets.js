@@ -1,119 +1,127 @@
+// import { setTimeout } from 'core-js/library/web/timers';
+
 const socket = require('socket.io');
 const axios = require('axios');
-const appRoot = 'http://localhost';
-
-function Song (name, artist, album, imagery) {
-  return {
-    name,
-    artist,
-    album,
-    imagery,
-    votes: 0
-  };
-}
+const lockinDuration = 15 * 1000;
+const fetchInterval = 15 * 1000;
 
 let currentSongData = {
   isPlaying: null,
   elapsed: null,
   currentSong: {
-    title: 'Citizen',
-    artist: 'Broken Bells',
-    album: 'After the Disco',
+    title: "When the Music's Over",
+    artist: 'The Doors',
+    album: 'L.A. Woman',
     imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
     duration: 292066
   }
 };
-let playlistData = {
-  songs: [
-    {
-      title: 'Live From Space',
-      artist: 'Mac Miller',
-      album: 'Album 1',
-      imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
-      votes: 0,
-    },
-    {
-      title: 'Song 2',
-      artist: 'Artist 2',
-      album: 'Album 2',
-      imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
-      votes: 0,
-    },
-    {
-      title: 'Song 3',
-      artist: 'Artist 3',
-      album: 'Album 3',
-      imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
-      votes: 0,
-    },
-    {
-      title: 'Song 3',
-      artist: 'Artist 3',
-      album: 'Album 3',
-      imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
-      votes: 0,
-    }
-
-  ]
-};
+let upNextChoices = [];
 
 
-const generateNextPlaylist = () => {
-
-};
 
 exports = module.exports = function(server) {
   const io = socket(server);
 
+  async function determineVoteWinner() {
+    let index = Math.floor(upNextChoices.length * Math.random());
+    let maxVotes = 0;
+    // Grab upnext for random selection
+    if (!upNextChoices.length) {
+      await fetchNewUpNext();
+    }
+    upNextChoices.map((choice, i) => {
+      if (choice.votes > maxVotes) {
+        maxVotes = choice.votes;
+        index = i;
+      }
+    });
+    const selectedTrack = upNextChoices[index];
+    console.log('Winner: ', selectedTrack.title);
+    await axios.post('/spotify/queue/' + selectedTrack.uri);
+  };
+
+
+
   // Called periodically to refresh data
-  const fetchCurrentSong = () => {
-    axios.get('/spotify/player/current')
-      .then(response => {
-        if (!response.data.item) {
-          console.error(response.data.error.status + ': ' + response.data.error.message);
+  async function fetchCurrentSong () {
+    try {
+      const response = await axios.get('/spotify/player/current');
+      const player = response.data;
+      const elapsed = player.progress_ms;
+      const duration = player.item.duration_ms;
+      if (player.item) {
+        currentSongData = {
+          isPlaying: player.is_playing,
+          elapsed: elapsed,
+          currentSong: {
+            title: player.item.name,
+            artist: player.item.album.artists.map(x => x.name).join(', '),
+            imagery: player.item.album.images[0].url,
+            duration: duration,
+            album: player.item.album.name
+          }
+        };
+        if (elapsed + lockinDuration > duration) {
+          console.log('Time to set new song');
+          await determineVoteWinner();
+          await fetchNewUpNext();
+          
+          setTimeout(async function() {
+            io.emit('player:current', currentSongData); 
+            io.emit('player:song-choices', upNextChoices);
+          }, duration - elapsed);
         }
-        if (response.data.item) {
-          currentSongData = {
-            isPlaying: response.data.is_playing,
-            elapsed: response.data.progress_ms,
-            currentSong: {
-              title: response.data.item.name,
-              artist: response.data.item.album.artists.map(x => x.name).join(', '),
-              imagery: response.data.item.album.images[0].url,
-              duration: response.data.item.duration_ms,
-              album: response.data.item.album.name
-            }
-          };
-          fetchNewUpNext();
-          io.emit('player:current', currentSongData); 
-          io.emit('player:song-choices', playlistData.songs); 
-        }
+        io.emit('player:current', currentSongData); 
+        // io.emit('player:song-choices', upNextChoices); 
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    };
+
+  async function fetchNewUpNext() {
+    try {
+      const response = await axios.post('/spotify/queue/newupnext')
+      const songs = response.data;
+      songs.map(song => {
+        song.votes = 0;
+        return song;
       });
+      upNextChoices = songs;
+      console.log({upNextChoices});
+      // io.emit('player:song-choices', upNextChoices); 
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const fetchNewUpNext = () => {
-    axios.post('/spotify/queue/newupnext')
-      .then(response => {
-        console.log('Response', response.data);
-        playlistData.songs = response.data;
-      });
-  };
 
-
-
+  fetchNewUpNext();
+  io.emit('player:song-choices', upNextChoices); 
+  
   // Commented out
-  setInterval(fetchCurrentSong, 10000);
+  setInterval(fetchCurrentSong, fetchInterval);
 
 
   io.on('connection', socket => {
-    io.emit('player:current', currentSongData); 
-    
+    io.emit('player:current', currentSongData);
+    io.emit('player:song-choices', upNextChoices);
     io.emit('user:count', socket.server.engine.clientsCount);
+    
+    socket.on('song:vote', uri => {
+      const songIndex = upNextChoices.map(song => song.uri).indexOf(uri);
+      if (songIndex >= 0) {
+        upNextChoices[songIndex].votes++;
+        io.emit('player:song-choices', upNextChoices);
+      }
+    });
+    
+    
+    
     io.on('disconnect', socket => {
       io.emit('user:count', socket.server.engine.clientsCount);
     });
-    // socket.on('player:action', data => {
-    //   // io.emit('game:score', game.score);
-    // });
+
   });
 };

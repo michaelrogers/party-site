@@ -34,7 +34,8 @@ export default class MusicPage extends Component {
         duration: 292066
       },
       songChoices: [],
-      elapsed: 0
+      elapsed: 0,
+      totalVotes: 0
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
     this.updateSongChoices = this.updateSongChoices.bind(this);
@@ -56,10 +57,13 @@ export default class MusicPage extends Component {
       elapsed: data.elapsed
     });
   }
-  updateSongChoices(data) {
-    console.log(data);
+  updateSongChoices(songs) {
+    console.log(songs);
+    const totalVotes = songs.reduce((acc, song) => acc + song.votes, 0);
+    console.log('totalVotes', totalVotes)
     this.setState({
-      songChoices: data
+      songChoices: songs,
+      totalVotes: totalVotes
     });
   }
   updateUserCount(data) {
@@ -79,6 +83,8 @@ export default class MusicPage extends Component {
           <Grid item xs={12} lg={6}>
             <UpNext
               songChoices={this.state.songChoices}
+              totalVotes={this.state.totalVotes}
+              socket={socket}
             />
           </Grid>
         </Grid>

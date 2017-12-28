@@ -10,11 +10,15 @@ const client_secret = process.env.spotifyClientSecret || nconf.get('server:api:s
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 const user_id = process.env.spotify_user_id || nconf.get('server:api:spotify:user_id');
 
+// Set on initial authentication, used for spotify bearer token
+let access_token;
+let refresh_token;
+
 // Queue should precede list
 const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
+// list of all playlist uri
 let playlistTracks = [];
 const queueid = process.env.queueid || nconf.get(('server:api:spotify:queueid'));
-// let upNext = [];
 
 const redirect_uri = publicUrl + '/spotify/callback'; // Your redirect uri
 
@@ -53,15 +57,101 @@ const generateRandomString = length => {
   return text;
 };
 
-const selectNextOptions = () => {
-  return playlistTracks.map(
-    playlist => {
-      const index = Math.floor(Math.random() * playlist.length);
-      return playlist.splice(index, 1)[0];
+const selectNextOptions = () => (
+  playlistTracks.map(
+    playlist => (
+      playlist[Math.floor(Math.random() * playlist.length)]
+    ))
+  );
+
+
+async function fetchPlaylistTracks(playlistid) {
+  const body = await rp({
+    uri: `${apiBase}/users/${user_id}/playlists/${playlistid}/tracks`,
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  });
+  return body.items.map(item => {
+      return {
+        title: item.track.name || '',
+        id: item.track.id || '',
+        uri: item.track.uri || '',
+        artist: item.track.artists.map(a => a.name).join(', ') || '',
+        album: item.track.album.name || '',
+        imagery: item.track.album.images[0].url || '',
+        duration: item.track.duration_ms || '',
+      }
     });
+}
+
+async function clearQueue () {
+  const queueTracks = await fetchPlaylistTracks(queueid);
+  const queueUris = queueTracks.map(track => {return {uri: track.uri}});
+  console.log({queueTracks, queueUris});
+  const body = await removePlaylistTracks(queueid, queueUris);
+  return body;
+}
+
+const removePlaylistTracks = (playlistid, track_uris) => (
+  rp({
+    uri: `${accountBase}/users/${user_id}/playlists/${playlistid}/tracks`,
+    method: 'DELETE',
+    body: {
+      tracks: track_uris
+    },
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  })
+);
+const playTracks = track_uris => (
+  rp({
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    uri: `${accountBase}/me/player/play`,
+    method: 'PUT',
+    body: {
+      uris: track_uris
+    },
+    json: true
+  })
+);
+const skipTrack = () => (
+  rp({
+    uri: apiBase + '/me/player/next',
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  })
+);
+const unskipTrack = () => (
+  rp({
+    uri: apiBase + '/me/player/previous',
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  })
+);
+
+const fetchCurrentPlayerState = () => {
+  const url = (apiBase + '/me/player');
+  const options = {
+    uri: url,
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+  return rp(options);
 };
 
-
+const appendToQueue = (trackuri) => {
+  const options = {
+    uri: apiBase + `/users/${user_id}/playlists/${queueid}/tracks?uris=${trackuri}`,
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+  return rp(options);
+}
 
 module.exports = {
   login: function(req, res) {
@@ -109,15 +199,19 @@ module.exports = {
         const responseBody = await rp(authOptions);
         access_token = responseBody.access_token;
         refresh_token = responseBody.refresh_token;
-        const promises = playlists.map(playlist => {
-            return rp({
-              uri: `${publicUrl}/spotify/playlist/${playlist.playlistid}/tracks`,
-              json: true,
-              method: 'GET'
-            });
-          });
+        const promises = playlists.map(playlist => (
+          fetchPlaylistTracks(playlist.playlistid)
+        ));
         
         playlistTracks = await Promise.all(promises);
+        
+        //FIXME: Returns 405 unexpected method DELETE
+        // Clear queue tracks on initial start
+        // await clearQueue();
+        
+        // await playTracks(['spotify:track:3gXiZI3OPiqyB8QKAFiHE0']);
+        selectNextOptions();
+        // res.send(playlistTracks)
         res.send('Ready to rock!');
         
       } catch(e) {
@@ -127,52 +221,19 @@ module.exports = {
       }
     }
   },
-  refreshToken: function(req, res) {
-    // requesting access token from refresh token
-    const refresh_token = req.query.refresh_token;
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-      },
-      json: true
-    };
-    
-    request.post(authOptions, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
-        access_token = body.access_token;
-        res.send({
-          'access_token': access_token
-        });
-      }
-    });
-  },
+
 
   skip: async function(req, res, next) {
     try {
-      const options = {
-        uri: apiBase + '/me/player/next',
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-      const response = await rp(options);
+      const response = await skipTrack();
       res.send(response);
-      } catch(e) {
-        next(e);
-      }
+    } catch(e) {
+      next(e);
+    }
   },
   unskip: async function(req, res, next) {
     try {
-      const options = {
-        uri: apiBase + '/me/player/previous',
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-      const response = await rp(options);
+      const response = await unskipTrack();
       res.send(response);
       } catch(e) {
         next(e);
@@ -180,14 +241,8 @@ module.exports = {
   },
   current: async function(req, res, next) {
     try {
-      const url = (apiBase + '/me/player');
-      const options = {
-        uri: url,
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-      const body = await rp(options);
+      
+      const body = await fetchCurrentPlayerState();
       res.send(body);
     } catch(e) {
       next(e);
@@ -214,24 +269,8 @@ module.exports = {
   fetchPlaylistTracks: async function(req, res, next) {
     try {
       const playlistId = req.params.playlistid;
-      const options = {
-        uri: `${apiBase}/users/${user_id}/playlists/${playlistId}/tracks`,
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-      const body = await rp(options);
-      const tracks = body.items.map(item => {
-          return {
-            title: item.track.name || '',
-            id: item.track.id || '',
-            uri: item.track.uri || '',
-            artist: item.track.artists.map(a => a.name).join(', ') || '',
-            album: item.track.album.name || '',
-            imagery: item.track.album.images[0].url || '',
-            duration: item.track.duration_ms || '',
-          }
-        });
+      const tracks = fetchPlaylistTracks(playlistId);
+      
       res.send(tracks);
     } catch(e) {
       next(e);
@@ -240,13 +279,7 @@ module.exports = {
   addTrackToQueue: async function(req, res, next) {
     try {
       const trackuri = req.params.trackuri;
-      const options = {
-        uri: apiBase + `/users/${user_id}/playlists/${queueid}/tracks?uris=${trackuri}`,
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      };
-      const body = await rp(options);
+      const body = await appendToQueue(trackuri);
 
       res.send(body);
     } catch(e) {
@@ -287,6 +320,28 @@ module.exports = {
     } catch(e) {
       next(e);
     }
+  },
+  refreshToken: function(req, res) {
+    // requesting access token from refresh token
+    const refresh_token = req.query.refresh_token;
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      },
+      json: true
+    };
+    
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        access_token = body.access_token;
+        res.send({
+          'access_token': access_token
+        });
+      }
+    });
   },
 
 };

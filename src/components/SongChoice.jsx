@@ -72,7 +72,7 @@ function MediaControlCard(props) {
           image={props.song ? props.song.imagery : ''}
           title={props.song ? props.song.album : ''}
         />
-        <LinearProgress className={classes.linearProgress} color="accent" mode="determinate" value={Math.random() * 100} />
+        <LinearProgress className={classes.linearProgress} color="accent" mode="determinate" value={props.song && props.song.votes ? props.song.votes / props.totalVotes * 100 : 0} />
         </Card>
     </div>
   );
