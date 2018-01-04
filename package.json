@@ -12,6 +12,7 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "dustjs-linkedin": "^2.7.5",
+    "es6-promise-debounce": "^1.0.1",
     "express": "^4.16.2",
     "mailgun-js": "^0.13.1",
     "material-ui": "next",

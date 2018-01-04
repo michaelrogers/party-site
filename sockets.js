@@ -1,9 +1,12 @@
 // import { setTimeout } from 'core-js/library/web/timers';
-
+const debounce = require('./server/utils/debounce');
+// const debounce = require('es6-promise-debounce');
 const socket = require('socket.io');
 const axios = require('axios');
-const lockinDuration = 15 * 1000;
-const fetchInterval = 15 * 1000;
+const lockinDuration = process.env.lockin || 40 * 1000;
+const fetchInterval = process.env.fetch || 10 * 1000;
+const refreshInterval = process.env.refresh || 5 * 60 * 1000;
+console.log({lockinDuration, fetchInterval, refreshInterval});
 
 let currentSongData = {
   isPlaying: null,
@@ -17,7 +20,7 @@ let currentSongData = {
   }
 };
 let upNextChoices = [];
-
+let acceptingUpdates = true;
 
 
 exports = module.exports = function(server) {
@@ -38,18 +41,42 @@ exports = module.exports = function(server) {
     });
     const selectedTrack = upNextChoices[index];
     console.log('Winner: ', selectedTrack.title);
-    await axios.post('/spotify/queue/' + selectedTrack.uri);
-  };
+    return axios.post('/spotify/queue/' + selectedTrack.uri);
+  }
+
+  async function fetchNewUpNext() {
+    try {
+      const response = await axios.post('/spotify/queue/newupnext')
+      const songs = response.data;
+      songs.map(song => {
+        song.votes = 0;
+        return song;
+      });
+      upNextChoices = songs;
+      console.log('upNext', upNextChoices.map(c => c.title));
+      // io.emit('player:song-choices', upNextChoices); 
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
 
-
+  async function refreshToken() {
+    try {
+      console.log('Attempting refresh');
+      const response = await axios.get('/spotify/refresh-token');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+ 
   // Called periodically to refresh data
-  async function fetchCurrentSong () {
+  async function fetchCurrentSong() {
     try {
       const response = await axios.get('/spotify/player/current');
       const player = response.data;
-      const elapsed = player.progress_ms;
-      const duration = player.item.duration_ms;
+      const elapsed = player.progress_ms || 0;
+      const duration = player.item ? player.item.duration_ms : 0;
       if (player.item) {
         currentSongData = {
           isPlaying: player.is_playing,
@@ -62,47 +89,42 @@ exports = module.exports = function(server) {
             album: player.item.album.name
           }
         };
-        if (elapsed + lockinDuration > duration) {
-          console.log('Time to set new song');
-          await determineVoteWinner();
-          await fetchNewUpNext();
-          
-          setTimeout(async function() {
-            io.emit('player:current', currentSongData); 
-            io.emit('player:song-choices', upNextChoices);
-          }, duration - elapsed);
-        }
-        io.emit('player:current', currentSongData); 
-        // io.emit('player:song-choices', upNextChoices); 
+        if ((elapsed + lockinDuration) > duration) {
+            if (acceptingUpdates) {
+              acceptingUpdates = false;
+              await determineVoteWinner();
+              await fetchNewUpNext();
+              setTimeout(async function() {
+                console.log('Playlist: End of song');
+                acceptingUpdates = true;
+                await fetchCurrentSong();
+                io.emit('player:current', currentSongData); 
+                io.emit('player:song-choices', upNextChoices);
+              }, (duration - elapsed) + 1000);
+            } else {
+              console.log('Playlist: Update ignored');
+            }
+              
+            // },
+            // lockinDuration * 2
+            // ); //debounce
+          }
+          io.emit('player:current', currentSongData); 
+          // io.emit('player:song-choices', upNextChoices); 
       }
     } catch (e) {
       console.error(e);
     }
-    };
-
-  async function fetchNewUpNext() {
-    try {
-      const response = await axios.post('/spotify/queue/newupnext')
-      const songs = response.data;
-      songs.map(song => {
-        song.votes = 0;
-        return song;
-      });
-      upNextChoices = songs;
-      console.log({upNextChoices});
-      // io.emit('player:song-choices', upNextChoices); 
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+  }
 
   fetchNewUpNext();
   io.emit('player:song-choices', upNextChoices); 
-  
-  // Commented out
-  setInterval(fetchCurrentSong, fetchInterval);
-
+  // Setup fetching
+  if (!process.env.disableFetch) {
+    console.log('Info: Fetch in progress');
+    setInterval(fetchCurrentSong, fetchInterval);
+    setInterval(refreshToken, refreshInterval);
+  }
 
   io.on('connection', socket => {
     io.emit('player:current', currentSongData);
@@ -116,12 +138,10 @@ exports = module.exports = function(server) {
         io.emit('player:song-choices', upNextChoices);
       }
     });
-    
-    
-    
     io.on('disconnect', socket => {
       io.emit('user:count', socket.server.engine.clientsCount);
     });
-
   });
+
+  
 };

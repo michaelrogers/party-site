@@ -1,9 +1,7 @@
-const request = require('request');
 const rp = require('request-promise');
 const path = require('path');
 const querystring = require('querystring');
 const nconf = require('nconf');
-// const axios = require('axios');
 
 const client_id = process.env.spotifyClientId || nconf.get('server:api:spotify:clientId');
 const client_secret = process.env.spotifyClientSecret || nconf.get('server:api:spotify:clientSecret');
@@ -73,16 +71,16 @@ async function fetchPlaylistTracks(playlistid) {
     json: true
   });
   return body.items.map(item => {
-      return {
-        title: item.track.name || '',
-        id: item.track.id || '',
-        uri: item.track.uri || '',
-        artist: item.track.artists.map(a => a.name).join(', ') || '',
-        album: item.track.album.name || '',
-        imagery: item.track.album.images[0].url || '',
-        duration: item.track.duration_ms || '',
-      }
-    });
+    return {
+      title: item.track.name || '',
+      id: item.track.id || '',
+      uri: item.track.uri || '',
+      artist: item.track.artists.map(a => a.name).join(', ') || '',
+      album: item.track.album.name || '',
+      imagery: item.track.album.images[0].url || '',
+      duration: item.track.duration_ms || '',
+    }
+  });
 }
 
 async function clearQueue () {
@@ -104,8 +102,8 @@ const removePlaylistTracks = (playlistid, track_uris) => (
     json: true
   })
 );
-const playTracks = track_uris => (
-  rp({
+const playTracks = (track_uris = []) => (
+  rp.put({
     headers: { 'Authorization': 'Bearer ' + access_token },
     uri: `${accountBase}/me/player/play`,
     method: 'PUT',
@@ -143,7 +141,7 @@ const fetchCurrentPlayerState = () => {
   return rp(options);
 };
 
-const appendToQueue = (trackuri) => {
+const appendToQueue = trackuri => {
   const options = {
     uri: apiBase + `/users/${user_id}/playlists/${queueid}/tracks?uris=${trackuri}`,
     method: 'POST',
@@ -199,6 +197,7 @@ module.exports = {
         const responseBody = await rp(authOptions);
         access_token = responseBody.access_token;
         refresh_token = responseBody.refresh_token;
+        console.log('Token: Initial tokens received');
         const promises = playlists.map(playlist => (
           fetchPlaylistTracks(playlist.playlistid)
         ));
@@ -208,16 +207,13 @@ module.exports = {
         //FIXME: Returns 405 unexpected method DELETE
         // Clear queue tracks on initial start
         // await clearQueue();
-        
         // await playTracks(['spotify:track:3gXiZI3OPiqyB8QKAFiHE0']);
-        selectNextOptions();
-        // res.send(playlistTracks)
+
+        await selectNextOptions();
         res.send('Ready to rock!');
         
       } catch(e) {
         next(e);
-        // res.redirect('/#' +
-        // querystring.stringify({error: 'invalid_token'}));
       }
     }
   },
@@ -228,7 +224,7 @@ module.exports = {
       const response = await skipTrack();
       res.send(response);
     } catch(e) {
-      next(e);
+      next(e.status);
     }
   },
   unskip: async function(req, res, next) {
@@ -236,16 +232,21 @@ module.exports = {
       const response = await unskipTrack();
       res.send(response);
       } catch(e) {
-        next(e);
+        next(e.status);
       }
   },
   current: async function(req, res, next) {
     try {
-      
-      const body = await fetchCurrentPlayerState();
-      res.send(body);
+      if (access_token) {
+
+        const body = await fetchCurrentPlayerState();
+        res.send(body);
+      } else {
+        console.log("Token: access_token undefined");
+        res.send("Token: access_token undefined");
+      }
     } catch(e) {
-      next(e);
+      next(e.message);
     }
   },
   newUpNext: function(req, res, next) {
@@ -253,6 +254,7 @@ module.exports = {
   },
   currentSong: async function(req, res, next) {
     try {
+
       const options = {
         uri: apiBase + '/me/player/currently-playing',
         method: 'GET',
@@ -262,7 +264,7 @@ module.exports = {
       const body = await rp(options);
       res.send(body);
     } catch(e) {
-      next(e);
+      next(e.message);
     }
   },
 
@@ -273,7 +275,7 @@ module.exports = {
       
       res.send(tracks);
     } catch(e) {
-      next(e);
+      next(e.status);
     }
   },
   addTrackToQueue: async function(req, res, next) {
@@ -283,7 +285,7 @@ module.exports = {
 
       res.send(body);
     } catch(e) {
-      next(e);
+      next(e.status);
     }
   },
   fetchAllPlaylists: async function(req, res, next) {
@@ -304,7 +306,7 @@ module.exports = {
       });
       res.send(playlists);
     } catch(e) {
-      next(e);
+      next(e.status);
     }
   },
   fetchUserProfile: async function(req, res, next) {
@@ -318,30 +320,35 @@ module.exports = {
       const body = await rp(options)
       res.send(body);
     } catch(e) {
-      next(e);
+      next(e.status);
     }
   },
-  refreshToken: function(req, res) {
-    // requesting access token from refresh token
-    const refresh_token = req.query.refresh_token;
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-      },
-      json: true
-    };
-    
-    request.post(authOptions, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
-        access_token = body.access_token;
-        res.send({
-          'access_token': access_token
-        });
-      }
-    });
+  refreshToken: async function(req, res, next) {
+    // const refresh_token = req.query.refresh_token;
+    if (!refresh_token) {
+      console.log('Refresh cancelled');
+      next();
+      return false;
+    }
+    try {
+      const authOptions = {
+        uri: accountBase + '/api/token',
+        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+        method: 'POST',
+        form: {
+          grant_type: 'refresh_token',
+          refresh_token: refresh_token
+        },
+        json: true
+      };
+      const body = await rp(authOptions)
+      access_token = body.access_token;
+      console.log('Token: Refreshed', access_token);
+      res.send({ 'access_token': access_token });
+    } catch(e) {
+      next(e.message || e);
+    }
+
   },
 
 };

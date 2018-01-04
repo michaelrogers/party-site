@@ -16,7 +16,8 @@ const styles = theme => ({
     position: 'relative',
     background: 'transparent',
     borderRadius: 2,
-    marginBottom: 10
+    marginBottom: 10,
+    
   },
   linearProgress: {
     position: 'absolute',
@@ -28,6 +29,8 @@ const styles = theme => ({
   details: {
     display: 'flex',
     flexDirection: 'column',
+    maxWidth: '55%'
+    
   },
   content: {
     flex: '1 0 auto',

@@ -71,7 +71,7 @@ main h2 {
     font-size: 2.5em !important;
   }
   .ButtonAppBar-root-12 {
-    margin-bottom: 20px !important;
+    margin-bottom: 30px !important;
   }
 }
 
@@ -167,9 +167,13 @@ a:active {
   box-shadow:rgba(0, 0, 0, 0.9) 0px 0px 16px 15px;
 }
 
-footer {
-  height: 150px;
-}
+footer { height: 150px; }
+
+/* @media (min-width: 600px) {
+  #app-bar header {
+    position: absolute;
+  }
+} */
 
 /* .song-choice {
   margin-bottom: 5px;

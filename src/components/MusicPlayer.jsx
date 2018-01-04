@@ -7,9 +7,9 @@ import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 
-import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
-import PlayArrowIcon from 'material-ui-icons/PlayArrow';
-import SkipNextIcon from 'material-ui-icons/SkipNext';
+// import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
+// import PlayArrowIcon from 'material-ui-icons/PlayArrow';
+// import SkipNextIcon from 'material-ui-icons/SkipNext';
 const path = require('path');
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 
@@ -61,7 +61,8 @@ export default class MusicPlayer extends Component {
     this.unskip = this.unskip.bind(this);
     this.fetchCurrentSong = this.fetchCurrentSong.bind(this);
   }
-  timer: number;
+  
+  timer: Number;
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 1000);
@@ -142,17 +143,16 @@ export default class MusicPlayer extends Component {
           </Typography>
         </CardContent>
         <CardActions>
-        <IconButton aria-label="Previous" onClick={this.unskip}>
+        {/*
+          <IconButton aria-label="Previous" onClick={this.unskip}>
             <SkipPreviousIcon />
           </IconButton>
+        */}
           {/*
-          <IconButton aria-label="Play/pause">
-            <PlayArrowIcon  />
-          </IconButton>
-          */}
           <IconButton aria-label="Next" onClick={this.skip}>
             <SkipNextIcon />
           </IconButton>
+          */}
         </CardActions>
       </Card>
     )

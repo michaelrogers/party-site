@@ -22,7 +22,9 @@ const port = process.env.PORT || 80;
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 // Database configuration with mongoose
-mongoose.connect(process.env.MONGODB_URI || nconf.get('server:mongoURI'));
+mongoose.connect(process.env.MONGODB_URI || nconf.get('server:mongoURI'), {
+  useMongoClient: true
+});
 const db = mongoose.connection;
 // Show any mongoose errors
 db.on('error', error => console.log('Mongoose Error:', error));
