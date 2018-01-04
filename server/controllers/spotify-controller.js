@@ -351,6 +351,7 @@ module.exports = {
 
   },
   showLogin: function (req, res) {
-    res.sendFile('/spotify/index.html');
+    console.log('showLogin')
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'spotify', 'index.html'));
   }
 };

@@ -4,7 +4,7 @@ const spotifyController = require('../controllers/spotify-controller.js');
 
 const router = require('express').Router();
 
-router.get('/', spotifyController.showLogin);
+router.get('/oauth', spotifyController.showLogin);
 router.get('/login', spotifyController.login);
 router.get('/callback', spotifyController.callback);
 router.get('/refresh-token', spotifyController.refreshToken);
