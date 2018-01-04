@@ -350,5 +350,7 @@ module.exports = {
     }
 
   },
-
+  showLogin: function (req, res) {
+    res.sendFile('/spotify/index.html');
+  }
 };

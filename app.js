@@ -42,6 +42,7 @@ const whitelist = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://michael-and-leigh.herokuapp.com',
+  'https://staging-ml.herokuapp.com/',
   'https://michaelandleigh.com',
   'https://www.michaelandleigh.com'
 ];
