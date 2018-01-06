@@ -27,6 +27,7 @@ let acceptingUpdates = true;
 
 exports = module.exports = function(server) {
   const io = socket(server);
+  console.log('Info: Sockets Online');
 
   async function determineVoteWinner() {
     let index = Math.floor(upNextChoices.length * Math.random());
@@ -43,7 +44,7 @@ exports = module.exports = function(server) {
     });
     const selectedTrack = upNextChoices[index];
     console.log('Winner: ', selectedTrack.title);
-    return axios.post('/spotify/queue/' + selectedTrack.uri);
+    return axios.post(publicUrl + '/spotify/queue/' + selectedTrack.uri);
   }
 
   async function fetchNewUpNext() {

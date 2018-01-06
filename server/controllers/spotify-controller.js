@@ -14,7 +14,7 @@ let refresh_token;
 
 // Queue should precede list
 // const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
-// Hard coded for time constraints
+// FIXME: Hard coded for time constraints
 const playlists =  [
   {
     "name": "Chill",
