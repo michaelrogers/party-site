@@ -120,7 +120,7 @@ if (process.env.environment === 'PROD') {
 //   console.log(`App listening on port ${port}!`);
 // });
 
-server.listen(port, () => console.log('Info: Listening on port ' + port));
 require('./sockets')(server);
+server.listen(port, () => console.log('Info: Listening on port ' + port));
 
 
