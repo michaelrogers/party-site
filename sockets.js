@@ -6,6 +6,8 @@ const axios = require('axios');
 const lockinDuration = process.env.lockin || 40 * 1000;
 const fetchInterval = process.env.fetch || 10 * 1000;
 const refreshInterval = process.env.refresh || 5 * 60 * 1000;
+
+const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 console.log({lockinDuration, fetchInterval, refreshInterval});
 
 let currentSongData = {
@@ -46,7 +48,7 @@ exports = module.exports = function(server) {
 
   async function fetchNewUpNext() {
     try {
-      const response = await axios.get('/spotify/queue/newupnext')
+      const response = await axios.get(publicUrl + '/spotify/queue/newupnext')
       const songs = response.data;
       songs.map(song => {
         song.votes = 0;
@@ -64,7 +66,7 @@ exports = module.exports = function(server) {
   async function refreshToken() {
     try {
       console.log('Attempting refresh');
-      const response = await axios.get('/spotify/refresh-token');
+      const response = await axios.get(publicUrl + '/spotify/refresh-token');
     } catch (e) {
       console.log(e);
     }
@@ -73,7 +75,7 @@ exports = module.exports = function(server) {
   // Called periodically to refresh data
   async function fetchCurrentSong() {
     try {
-      const response = await axios.get('/spotify/player/current');
+      const response = await axios.get(publicUrl + '/spotify/player/current');
       const player = response.data;
       const elapsed = player.progress_ms || 0;
       const duration = player.item ? player.item.duration_ms : 0;
