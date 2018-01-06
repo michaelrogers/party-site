@@ -80,7 +80,7 @@ if (process.env.environment === 'PROD') {
   app.use(logger('tiny'));
   app.use(express.static(path.join(__dirname, 'build')));
   
-  app.get('/*', function (req, res) {
+  app.get('*', function (req, res) {
     const directory = path.join(__dirname, 'build', 'index.html');
     res.sendFile(directory);
   });
@@ -95,7 +95,7 @@ if (process.env.environment === 'PROD') {
   app.use(logger('dev'));
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.get('/*', function (req, res) {
+  app.get('*', function (req, res) {
     const directory = path.join(__dirname, 'public', 'index.html');
     res.sendFile(directory);
   });
