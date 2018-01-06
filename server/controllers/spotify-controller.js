@@ -13,7 +13,22 @@ let access_token;
 let refresh_token;
 
 // Queue should precede list
-const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
+// const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
+// Hard coded for time constraints
+const playlists =  [
+  {
+    "name": "Chill",
+    "playlistid": "36ItKBbn3IQZSENPGxB6yt"
+  },
+  {
+    "name": "Love Songs",
+    "playlistid": "69thfm25Tsi7UdlRHXpJ2x"
+  },
+  {
+    "name": "Dance Time",
+    "playlistid": "1ZddTf6HVO22cFaGySin8d"
+  }
+];
 // list of all playlist uri
 let playlistTracks = [];
 const queueid = process.env.queueid || nconf.get(('server:api:spotify:queueid'));
