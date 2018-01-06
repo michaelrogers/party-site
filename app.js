@@ -37,10 +37,10 @@ app.use(cookieParser());
 
 
 const whitelist = [
-  'http://localhost:8080',
-  'http://localhost',
-  'http://localhost:3000',
-  'http://localhost:3001',
+  // 'http://localhost:8080',
+  // 'http://localhost',
+  // 'http://localhost:3000',
+  // 'http://localhost:3001',
   'https://michael-and-leigh.herokuapp.com',
   'https://staging-ml.herokuapp.com/',
   'https://michaelandleigh.com',
@@ -62,12 +62,7 @@ const corsOptions = {
   }
 };
 
-app.use(cors(corsOptions));
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+
 
 const routes = require('./server/routes');
 
@@ -84,23 +79,30 @@ if (process.env.environment === 'PROD') {
   app.use(logger('tiny'));
   app.use(express.static(path.join(__dirname, 'build')));
   
-  app.get('/', function (req, res) {
+  app.get('/*', function (req, res) {
     const directory = path.join(__dirname, 'build', 'index.html');
     res.sendFile(directory);
   });
 } else {
+
   console.log('Info: Dev mode');
+  app.use(cors(corsOptions));
+  app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
+  
+  
+  
   app.use(logger('dev'));
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.get('/', function (req, res) {
+  app.get('/*', function (req, res) {
     const directory = path.join(__dirname, 'public', 'index.html');
     res.sendFile(directory);
   });
 }
-
-
-
 
 // Set template engine
 // app.engine('dust', cons.dust);

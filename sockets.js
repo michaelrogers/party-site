@@ -46,7 +46,7 @@ exports = module.exports = function(server) {
 
   async function fetchNewUpNext() {
     try {
-      const response = await axios.post('/spotify/queue/newupnext')
+      const response = await axios.get('/spotify/queue/newupnext')
       const songs = response.data;
       songs.map(song => {
         song.votes = 0;
