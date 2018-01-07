@@ -5,12 +5,11 @@ import moment from 'moment';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
+// import IconButton from 'material-ui/IconButton';
 
 // import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
 // import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 // import SkipNextIcon from 'material-ui-icons/SkipNext';
-const path = require('path');
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 
 
@@ -54,7 +53,7 @@ export default class MusicPlayer extends Component {
     super(props);
     this.state = {
       progress: 0,
-      elapsed: 0
+      elapsed: 0,
     };
     this.progress = this.progress.bind(this);
     this.skip = this.skip.bind(this);
@@ -100,7 +99,7 @@ export default class MusicPlayer extends Component {
 
   progress = () => {
     const { progress, elapsed } = this.state;
-    const newElapsed = parseInt(elapsed + 1000, 10);
+    const newElapsed = this.props.isPlaying ? parseInt(elapsed + 1000, 10) : elapsed;
     const trackDuration = this.props.current.duration;
     const percentProgress = Math.floor(
       (1 - (trackDuration - newElapsed) / trackDuration)  * 100

@@ -3,15 +3,17 @@ const debounce = require('./server/utils/debounce');
 // const debounce = require('es6-promise-debounce');
 const socket = require('socket.io');
 const axios = require('axios');
-const lockinDuration = process.env.lockin || 40 * 1000;
-const fetchInterval = process.env.fetch || 10 * 1000;
-const refreshInterval = process.env.refresh || 5 * 60 * 1000;
+// Timing intervals
+const lockinDuration = parseInt(process.env.lockin || 40 * 1000, 10);
+const fetchInterval = parseInt(process.env.fetch || 8 * 1000);
+const refreshInterval = parseInt(process.env.refresh || 5 * 60 * 1000);
+const endOfSongBuffer = parseInt(process.env.endSong || 1 * 1000);
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
-console.log({lockinDuration, fetchInterval, refreshInterval});
+console.log({lockinDuration, fetchInterval, refreshInterval, endOfSongBuffer});
 
 let currentSongData = {
-  isPlaying: null,
+  isPlaying: false,
   elapsed: null,
   currentSong: {
     title: "When the Music's Over",
@@ -24,10 +26,9 @@ let currentSongData = {
 let upNextChoices = [];
 let acceptingUpdates = true;
 
-
 exports = module.exports = function(server) {
-  const io = socket(server);
   console.log('Info: Sockets Online');
+  const io = socket(server);
 
   async function determineVoteWinner() {
     let index = Math.floor(upNextChoices.length * Math.random());
@@ -49,7 +50,8 @@ exports = module.exports = function(server) {
 
   async function fetchNewUpNext() {
     try {
-      const response = await axios.get(publicUrl + '/spotify/queue/newupnext')
+      const response = await axios.get(
+        publicUrl + '/spotify/queue/newupnext')
       const songs = response.data;
       songs.map(song => {
         song.votes = 0;
@@ -66,8 +68,9 @@ exports = module.exports = function(server) {
 
   async function refreshToken() {
     try {
-      console.log('Attempting refresh');
-      const response = await axios.get(publicUrl + '/spotify/refresh-token');
+      console.log('Token: Attempting refresh');
+      const response = await axios.get(
+        publicUrl + '/spotify/refresh-token');
     } catch (e) {
       console.log(e);
     }
@@ -76,7 +79,8 @@ exports = module.exports = function(server) {
   // Called periodically to refresh data
   async function fetchCurrentSong() {
     try {
-      const response = await axios.get(publicUrl + '/spotify/player/current');
+      const response = await axios.get(
+        publicUrl + '/spotify/player/current');
       const player = response.data;
       const elapsed = player.progress_ms || 0;
       const duration = player.item ? player.item.duration_ms : 0;
@@ -103,14 +107,10 @@ exports = module.exports = function(server) {
                 await fetchCurrentSong();
                 io.emit('player:current', currentSongData); 
                 io.emit('player:song-choices', upNextChoices);
-              }, (duration - elapsed) + 1000);
+              }, (duration - elapsed) + endOfSongBuffer);
             } else {
               console.log('Playlist: Update ignored');
             }
-              
-            // },
-            // lockinDuration * 2
-            // ); //debounce
           }
           io.emit('player:current', currentSongData); 
           // io.emit('player:song-choices', upNextChoices); 
@@ -124,9 +124,11 @@ exports = module.exports = function(server) {
   io.emit('player:song-choices', upNextChoices); 
   // Setup fetching
   if (!process.env.disableFetch) {
-    console.log('Info: Fetch in progress');
+    console.log('Info: Fetch is happening');
     setInterval(fetchCurrentSong, fetchInterval);
     setInterval(refreshToken, refreshInterval);
+  } else {
+    console.log('Info: Fetch disabled');
   }
 
   io.on('connection', socket => {
@@ -145,6 +147,5 @@ exports = module.exports = function(server) {
       io.emit('user:count', socket.server.engine.clientsCount);
     });
   });
-
   
 };

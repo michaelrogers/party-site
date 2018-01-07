@@ -15,20 +15,16 @@ let refresh_token;
 // Queue should precede list
 // const playlists = process.env.spotifyPlaylists || nconf.get('server:api:spotify:playlists');
 // FIXME: Hard coded for time constraints
-const playlists =  [
-  {
+const playlists =  [{
     "name": "Chill",
     "playlistid": "36ItKBbn3IQZSENPGxB6yt"
-  },
-  {
+  }, {
     "name": "Love Songs",
     "playlistid": "69thfm25Tsi7UdlRHXpJ2x"
-  },
-  {
+  }, {
     "name": "Dance Time",
     "playlistid": "1ZddTf6HVO22cFaGySin8d"
-  }
-];
+}];
 // list of all playlist uri
 let playlistTracks = [];
 const queueid = process.env.queueid || nconf.get(('server:api:spotify:queueid'));
@@ -348,7 +344,15 @@ module.exports = {
     try {
       const authOptions = {
         uri: accountBase + '/api/token',
-        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+        headers: { 
+          'Authorization': (
+            'Basic ' + (
+              new Buffer(
+                client_id + ':' + client_secret
+              ).toString('base64')
+            )
+          ) 
+        },
         method: 'POST',
         form: {
           grant_type: 'refresh_token',
@@ -366,7 +370,16 @@ module.exports = {
 
   },
   showLogin: function (req, res) {
-    console.log('showLogin')
-    res.sendFile(path.join(__dirname, '..', '..', 'public', 'spotify', 'index.html'));
+    console.log('GET: showLogin')
+    res.sendFile(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'public',
+        'spotify',
+        'index.html'
+      )
+    );
   }
 };

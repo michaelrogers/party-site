@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardContent, CardMedia } from 'material-ui/Card';
-import IconButton from 'material-ui/IconButton';
+// import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
-import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
-import PlayArrowIcon from 'material-ui-icons/PlayArrow';
-import SkipNextIcon from 'material-ui-icons/SkipNext';
+// import SkipPreviousIcon from 'material-ui-icons/SkipPrevious';
+// import PlayArrowIcon from 'material-ui-icons/PlayArrow';
+// import SkipNextIcon from 'material-ui-icons/SkipNext';
 import { LinearProgress } from 'material-ui/Progress';
 
 const styles = theme => ({
@@ -52,6 +52,18 @@ const styles = theme => ({
     height: 38,
     width: 38,
   },
+  headline: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden'
+  },
+  subheading: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden'
+  }
 });
 
 function MediaControlCard(props) {
@@ -62,7 +74,7 @@ function MediaControlCard(props) {
       <Card className={classes.card}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
-            <Typography type="headline">{props.song ? props.song.title : ''}</Typography>
+            <Typography className={classes.headline} type="headline">{props.song ? props.song.title : ''}</Typography>
             <Typography type="subheading" color="secondary">
               {props.song ? props.song.artist : ''}
             </Typography>
@@ -76,7 +88,7 @@ function MediaControlCard(props) {
           title={props.song ? props.song.album : ''}
         />
         <LinearProgress className={classes.linearProgress} color="accent" mode="determinate" value={props.song && props.song.votes ? props.song.votes / props.totalVotes * 100 : 0} />
-        </Card>
+      </Card>
     </div>
   );
 }

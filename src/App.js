@@ -5,7 +5,6 @@ import {
   Switch
 } from 'react-router-dom';
 import { TransitionGroup, CSSTransition} from 'react-transition-group';
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 // import logo from './logo.svg';
 import './styles/index.css';
 

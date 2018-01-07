@@ -20,6 +20,11 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 15,
     width: '100%',
   },
+  '@media (max-width: 600px)': {
+    root: {
+      marginBottom: theme.spacing.unit * 4,
+    }
+  },
   flex: {
     flex: 1,
   },

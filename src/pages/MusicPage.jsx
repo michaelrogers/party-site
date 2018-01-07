@@ -26,14 +26,9 @@ export default class MusicPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: {
-        title: 'Citizen',
-        artist: 'Broken Bells',
-        album: 'After the Disco',
-        imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
-        duration: 292066
-      },
+      current: {},
       songChoices: [],
+      isPlaying: false,
       elapsed: 0,
       totalVotes: 0
     };
@@ -51,16 +46,14 @@ export default class MusicPage extends Component {
     socket.on('user:count', this.updateUserCount);
   }
   updateCurrentSong(data) {
-    console.log(data);
     this.setState({
       current: data.currentSong, 
+      isPlaying: data.isPlaying, 
       elapsed: data.elapsed
     });
   }
   updateSongChoices(songs) {
-    console.log(songs);
     const totalVotes = songs.reduce((acc, song) => acc + song.votes, 0);
-    console.log('totalVotes', totalVotes)
     this.setState({
       songChoices: songs,
       totalVotes: totalVotes
@@ -72,23 +65,22 @@ export default class MusicPage extends Component {
 
   render() {
     return (
-      <div>
-        <Grid container justify="center">
-          <Grid item xs={12} lg={4}>
-            <MusicPlayer
-              current={this.state.current}
-              elapsed={this.state.elapsed}
-            />
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <UpNext
-              songChoices={this.state.songChoices}
-              totalVotes={this.state.totalVotes}
-              socket={socket}
-            />
-          </Grid>
+      <Grid container justify="center">
+        <Grid item xs={11} lg={4}>
+          <MusicPlayer
+            current={this.state.current}
+            elapsed={this.state.elapsed}
+            isPlaying={this.state.isPlaying}
+          />
         </Grid>
-      </div>
+        <Grid item xs={11} lg={6}>
+          <UpNext
+            songChoices={this.state.songChoices}
+            totalVotes={this.state.totalVotes}
+            socket={socket}
+          />
+        </Grid>
+      </Grid>
     );
   }
 }
