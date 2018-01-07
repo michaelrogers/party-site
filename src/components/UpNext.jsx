@@ -12,16 +12,31 @@ export default class UpNext extends Component {
   }
 
   voteForSong(trackuri) {
-    this.props.socket.emit('song:vote', trackuri);
+    if (this.props.acceptingVotes) {
+      this.props.socket.emit('song:vote', trackuri);
+    } else {
+      console.log('Nope vote');
+    }
+  }
+  computeChoiceStyle(votes, maxVotes, acceptingVotes) {
+    const greyedOutStyle = {
+      filter: 'grayscale(.8)',
+      opacity: 0.7,
+      transition: 'opacity 0.5s, filter 0.5s'
+    };
+    return (!acceptingVotes && votes !== maxVotes) ? greyedOutStyle : {};
   }
 
 
   populateSongChoices(acceptingVotes) {
     if(this.props.songChoices) {
       const songChoices = this.props.songChoices || [];
+      const maxVotes = songChoices.reduce((acc, song) => Math.max(acc, song.votes), 0);
       return songChoices.map((choice, i) => {
         return (
-          <div key={i} onClick={this.voteForSong.bind(this, choice.uri)}>
+          <div key={i} onClick={this.voteForSong.bind(this, choice.uri)} 
+            style={this.computeChoiceStyle(choice.votes, maxVotes, acceptingVotes)}
+          >
             <SongChoice song={choice} totalVotes={this.props.totalVotes} />
           </div>
         );

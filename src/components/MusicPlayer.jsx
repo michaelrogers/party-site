@@ -96,7 +96,10 @@ export default class MusicPlayer extends Component {
   // }
 
   progress = () => {
-    const { progress, elapsed } = this.state;
+    const { 
+      // progress,
+      elapsed 
+    } = this.state;
     const newElapsed = this.props.isPlaying ? parseInt(elapsed + 1000, 10) : elapsed;
     const trackDuration = this.props.current.duration;
     const percentProgress = Math.floor(

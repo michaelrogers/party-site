@@ -69,7 +69,7 @@ const generateRandomString = length => {
 const selectNextOptions = () => (
   playlistTracks.map(
     playlist => (
-      playlist[Math.floor(Math.random() * playlist.length)]
+      playlist.splice(Math.floor(Math.random() * playlist.length), 1)[0]
     ))
   );
 

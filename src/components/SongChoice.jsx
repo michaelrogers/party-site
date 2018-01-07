@@ -67,7 +67,10 @@ const styles = theme => ({
 });
 
 function MediaControlCard(props) {
-  const { classes, theme } = props;
+  const {
+    classes,
+    // theme
+  } = props;
 
   return (
     <div className="song-choice">
