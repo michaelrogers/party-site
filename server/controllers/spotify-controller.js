@@ -220,7 +220,7 @@ module.exports = {
         // await clearQueue();
         // await playTracks(['spotify:track:3gXiZI3OPiqyB8QKAFiHE0']);
 
-        await selectNextOptions();
+        selectNextOptions();
         res.send('Ready to rock!');
         
       } catch(e) {

@@ -13,7 +13,12 @@ import Typography from 'material-ui/Typography';
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 
 
-const styles = theme => ({
+const styles = {
+  albumCover: {
+    borderRadius: '2px 2px 0 0',
+    height: 470,
+  },
+
   card: {
     display: 'flex',
   },
@@ -23,10 +28,6 @@ const styles = theme => ({
   },
   content: {
     flex: '1 0 auto',
-  },
-  albumCover: {
-    borderRadius: '2px 2px 0 0',
-    height: 440
   },
   cover: {
     width: 151,
@@ -38,14 +39,14 @@ const styles = theme => ({
   controls: {
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    // paddingLeft: theme.spacing.unit,
+    // paddingBottom: theme.spacing.unit,
   },
   playIcon: {
     height: 38,
     width: 38,
   },
-});
+};
 
 
 export default class MusicPlayer extends Component {
@@ -56,8 +57,8 @@ export default class MusicPlayer extends Component {
       elapsed: 0,
     };
     this.progress = this.progress.bind(this);
-    this.skip = this.skip.bind(this);
-    this.unskip = this.unskip.bind(this);
+    // this.skip = this.skip.bind(this);
+    // this.unskip = this.unskip.bind(this);
     this.fetchCurrentSong = this.fetchCurrentSong.bind(this);
   }
   
@@ -68,10 +69,7 @@ export default class MusicPlayer extends Component {
     // this.fetchCurrentSong();
   }
   componentWillReceiveProps(props) {
-    this.setState({
-      elapsed: props.elapsed,
-      // current: props.current
-    });
+    this.setState({ elapsed: props.elapsed });
   }
 
   componentWillUnmount() {
@@ -83,19 +81,19 @@ export default class MusicPlayer extends Component {
       mode: 'cors',
     }).then((response) => console.log(response.body));
   }
-  skip = () => {
-    fetch(publicUrl + '/spotify/controls/skip', {
-      credentials: 'include',
-      mode: 'no-cors',
-    }).then((response) => console.log(response));
-  }
-  unskip = () => {
-    const endpoint = publicUrl + '/spotify/controls/unskip';
-    fetch(endpoint, {
-      credentials: 'include',
-      mode: 'no-cors',
-    }).then((response) => console.log(response));
-  }
+  // skip = () => {
+  //   fetch(publicUrl + '/spotify/controls/skip', {
+  //     credentials: 'include',
+  //     mode: 'no-cors',
+  //   }).then((response) => console.log(response));
+  // }
+  // unskip = () => {
+  //   const endpoint = publicUrl + '/spotify/controls/unskip';
+  //   fetch(endpoint, {
+  //     credentials: 'include',
+  //     mode: 'no-cors',
+  //   }).then((response) => console.log(response));
+  // }
 
   progress = () => {
     const { progress, elapsed } = this.state;
@@ -117,7 +115,6 @@ export default class MusicPlayer extends Component {
           style={styles.albumCover}
           image={this.props.current.imagery}
           title={this.props.current.album}
-          style={{height:'470px', borderRadius: '2px 2px 0 0'}}
         />
         <CardContent>
           <Typography type="caption" component="p">
@@ -146,12 +143,10 @@ export default class MusicPlayer extends Component {
           <IconButton aria-label="Previous" onClick={this.unskip}>
             <SkipPreviousIcon />
           </IconButton>
-        */}
-          {/*
           <IconButton aria-label="Next" onClick={this.skip}>
             <SkipNextIcon />
           </IconButton>
-          */}
+        */}
         </CardActions>
       </Card>
     )

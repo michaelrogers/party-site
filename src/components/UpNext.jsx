@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
-// import Button from 'material-ui/Button';
-// import Grid from 'material-ui/Grid';
-import Card, { 
-  // CardActions,
-  CardContent,
-  // CardMedia
-} from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
 
 import Typography from 'material-ui/Typography';
 import SongChoice from './SongChoice';
 // const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
+
 export default class UpNext extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +16,7 @@ export default class UpNext extends Component {
   }
 
 
-  populateSongChoices() {
+  populateSongChoices(acceptingVotes) {
     if(this.props.songChoices) {
       const songChoices = this.props.songChoices || [];
       return songChoices.map((choice, i) => {
@@ -48,7 +42,7 @@ export default class UpNext extends Component {
         </Card>
         <br/>
         <div>
-          {this.populateSongChoices()}
+          {this.populateSongChoices(this.props.acceptingVotes)}
         </div>
       </div>
     );

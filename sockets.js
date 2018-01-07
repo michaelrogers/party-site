@@ -7,7 +7,7 @@ const axios = require('axios');
 const lockinDuration = parseInt(process.env.lockin || 40 * 1000, 10);
 const fetchInterval = parseInt(process.env.fetch || 8 * 1000);
 const refreshInterval = parseInt(process.env.refresh || 5 * 60 * 1000);
-const endOfSongBuffer = parseInt(process.env.endSong || 1 * 1000);
+const endOfSongBuffer = parseInt(process.env.endSong || 2 * 1000);
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 console.log({lockinDuration, fetchInterval, refreshInterval, endOfSongBuffer});
@@ -24,9 +24,9 @@ let currentSongData = {
   }
 };
 let upNextChoices = [];
-let acceptingUpdates = true;
+let acceptingVotes = true;
 
-exports = module.exports = function(server) {
+exports = module.exports = async function(server) {
   console.log('Info: Sockets Online');
   const io = socket(server);
 
@@ -44,7 +44,7 @@ exports = module.exports = function(server) {
       }
     });
     const selectedTrack = upNextChoices[index];
-    console.log('Winner: ', selectedTrack.title);
+    console.log('Winner: ', selectedTrack.title, '\n\nVotes: ', maxVotes);
     return axios.post(publicUrl + '/spotify/queue/' + selectedTrack.uri);
   }
 
@@ -75,7 +75,6 @@ exports = module.exports = function(server) {
       console.log(e);
     }
   }
- 
   // Called periodically to refresh data
   async function fetchCurrentSong() {
     try {
@@ -97,17 +96,22 @@ exports = module.exports = function(server) {
           }
         };
         if ((elapsed + lockinDuration) > duration) {
-            if (acceptingUpdates) {
-              acceptingUpdates = false;
+            if (acceptingVotes) {
+              const delayUpdate = (duration - elapsed) + endOfSongBuffer;
+              console.log({delayUpdate});
+              acceptingVotes = false;
+              io.emit('player:accepting-votes', acceptingVotes);
+
               await determineVoteWinner();
               await fetchNewUpNext();
               setTimeout(async function() {
                 console.log('Playlist: End of song');
-                acceptingUpdates = true;
+                acceptingVotes = true;
+                io.emit('player:accepting-votes', acceptingVotes);
                 await fetchCurrentSong();
                 io.emit('player:current', currentSongData); 
                 io.emit('player:song-choices', upNextChoices);
-              }, (duration - elapsed) + endOfSongBuffer);
+              }, delayUpdate);
             } else {
               console.log('Playlist: Update ignored');
             }
@@ -120,7 +124,7 @@ exports = module.exports = function(server) {
     }
   }
 
-  fetchNewUpNext();
+  await fetchNewUpNext();
   io.emit('player:song-choices', upNextChoices); 
   // Setup fetching
   if (!process.env.disableFetch) {
@@ -134,6 +138,7 @@ exports = module.exports = function(server) {
   io.on('connection', socket => {
     io.emit('player:current', currentSongData);
     io.emit('player:song-choices', upNextChoices);
+    io.emit('player:accepting-votes', acceptingVotes);
     io.emit('user:count', socket.server.engine.clientsCount);
     
     socket.on('song:vote', uri => {

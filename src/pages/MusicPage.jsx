@@ -26,15 +26,23 @@ export default class MusicPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: {},
+      current: {
+        title: 'Citizen',
+        artist: 'Broken Bells',
+        album: 'After the Disco',
+        imagery: 'https://i.scdn.co/image/006e418c379a9417ebf9af0c67a2d17726aa1932',
+        duration: 292066
+      },
       songChoices: [],
       isPlaying: false,
       elapsed: 0,
-      totalVotes: 0
+      totalVotes: 0,
+      acceptingVotes: false
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
     this.updateSongChoices = this.updateSongChoices.bind(this);
     this.updateUserCount = this.updateUserCount.bind(this);
+    this.updateAcceptingVotes = this.updateAcceptingVotes.bind(this);
   }
   componentWillUnMount() {
     socket.off('player:current');
@@ -44,6 +52,8 @@ export default class MusicPage extends Component {
     socket.on('player:current', this.updateCurrentSong);
     socket.on('player:song-choices', this.updateSongChoices);
     socket.on('user:count', this.updateUserCount);
+    socket.on('player:accepting-votes', this.updateAcceptingVotes);
+
   }
   updateCurrentSong(data) {
     this.setState({
@@ -57,6 +67,11 @@ export default class MusicPage extends Component {
     this.setState({
       songChoices: songs,
       totalVotes: totalVotes
+    });
+  }
+  updateAcceptingVotes(value) {
+    this.setState({
+      acceptingVotes: value
     });
   }
   updateUserCount(data) {
@@ -77,6 +92,7 @@ export default class MusicPage extends Component {
           <UpNext
             songChoices={this.state.songChoices}
             totalVotes={this.state.totalVotes}
+            acceptingVotes={this.state.acceptingVotes}
             socket={socket}
           />
         </Grid>
