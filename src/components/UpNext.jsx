@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import Card, { CardContent } from 'material-ui/Card';
+import Button from 'material-ui/Button';
 
 import Typography from 'material-ui/Typography';
 import SongChoice from './SongChoice';
 // const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
+
+const styles = {
+  voteButton: {
+    padding: 0,
+    margin: 0,
+    marginBottom: 10,
+    width: '100%'
+
+  },
+  actionHeader: {
+    fontSize:'1.5em',
+    padding: '1em'
+  }
+};
 
 export default class UpNext extends Component {
   constructor(props) {
@@ -34,11 +49,11 @@ export default class UpNext extends Component {
       const maxVotes = songChoices.reduce((acc, song) => Math.max(acc, song.votes), 0);
       return songChoices.map((choice, i) => {
         return (
-          <div key={i} onClick={this.voteForSong.bind(this, choice.uri)} 
-            style={this.computeChoiceStyle(choice.votes, maxVotes, acceptingVotes)}
+          <Button color="accent" disableRipple={!acceptingVotes} fullWidth={true} key={i} onClick={this.voteForSong.bind(this, choice.uri)} 
+            style={{...styles.voteButton, ...this.computeChoiceStyle(choice.votes, maxVotes, acceptingVotes)}}
           >
             <SongChoice song={choice} totalVotes={this.props.totalVotes} />
-          </div>
+          </Button>
         );
       });
     }
@@ -48,12 +63,10 @@ export default class UpNext extends Component {
     return (
       <div>
         <Card>
-          <CardContent>
-            <Typography component="h2" align="center">
-              Control the vibes
+            <Typography component="h2" align="center" style={styles.actionHeader}>
+              Tap to control the vibes
             </Typography>
             
-          </CardContent>
         </Card>
         <br/>
         <div>

@@ -16,7 +16,7 @@ const publicUrl = process.env.PUBLIC_URL || 'http://localhost';
 const styles = {
   albumCover: {
     borderRadius: '2px 2px 0 0',
-    height: 470,
+    height: 500,
   },
 
   card: {

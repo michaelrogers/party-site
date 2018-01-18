@@ -16,7 +16,6 @@ const styles = theme => ({
     position: 'relative',
     background: 'transparent',
     borderRadius: 2,
-    marginBottom: 10,
     
   },
   linearProgress: {
@@ -56,13 +55,18 @@ const styles = theme => ({
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    textAlign: 'left'
   },
   subheading: {
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    textAlign: 'left'
+  },
+  songChoice: {
+    width: '100%'
   }
 });
 
@@ -73,12 +77,12 @@ function MediaControlCard(props) {
   } = props;
 
   return (
-    <div className="song-choice">
+    <div className={classes.songChoice}>
       <Card className={classes.card}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
             <Typography className={classes.headline} type="headline">{props.song ? props.song.title : ''}</Typography>
-            <Typography type="subheading" color="secondary">
+            <Typography className={classes.subheading} type="subheading" color="secondary">
               {props.song ? props.song.artist : ''}
             </Typography>
           </CardContent>

@@ -3,15 +3,6 @@ import MusicPlayer from '../components/MusicPlayer';
 import UpNext from '../components/UpNext';
 import Grid from 'material-ui/Grid';
 
-
-// const socket = io.connect(
-//   'https://michaelandleigh.herokuapp.com',
-//   {
-//     reconnect: true,
-//     transports: ['websocket'],
-//     path: '/socket.io'
-//   });
-
 import io from 'socket.io-client';
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost/';
