@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MusicPlayer from '../components/MusicPlayer';
 import UpNext from '../components/UpNext';
 import Grid from 'material-ui/Grid';
+import CustomParticles from '../components/CustomParticles';
 
 import io from 'socket.io-client';
 
@@ -9,9 +10,7 @@ const publicUrl = process.env.PUBLIC_URL || 'http://localhost/';
 const socket = io.connect(publicUrl, {
   reconnect: true,
   transports: ['websocket'],
-  // path: '/socket.io'
 });
-
 
 export default class MusicPage extends Component {
   constructor(props) {
@@ -35,18 +34,22 @@ export default class MusicPage extends Component {
     this.updateUserCount = this.updateUserCount.bind(this);
     this.updateAcceptingVotes = this.updateAcceptingVotes.bind(this);
   }
-  componentWillUnMount() {
+  componentWillUnmount() {
     socket.off('player:current');
     socket.off('player:song-choices');
+    socket.off('user:count');
+    socket.off('player:accepting-votes');
   }
   componentDidMount() {
+    console.log('Component Mount')
     socket.on('player:current', this.updateCurrentSong);
     socket.on('player:song-choices', this.updateSongChoices);
-    socket.on('user:count', this.updateUserCount);
     socket.on('player:accepting-votes', this.updateAcceptingVotes);
-
+    socket.on('user:count', this.updateUserCount);
+    socket.emit('mount');
   }
   updateCurrentSong(data) {
+    console.log('updateCurrentSong')
     this.setState({
       current: data.currentSong, 
       isPlaying: data.isPlaying, 
@@ -54,6 +57,7 @@ export default class MusicPage extends Component {
     });
   }
   updateSongChoices(songs) {
+    console.log('updateSongChoices');
     const totalVotes = songs.reduce((acc, song) => acc + song.votes, 0);
     this.setState({
       songChoices: songs,
@@ -71,23 +75,26 @@ export default class MusicPage extends Component {
 
   render() {
     return (
-      <Grid container justify="center">
-        <Grid item xs={11} lg={4}>
-          <MusicPlayer
-            current={this.state.current}
-            elapsed={this.state.elapsed}
-            isPlaying={this.state.isPlaying}
-          />
+      <div>
+        <CustomParticles style={{height: '100%'}}/>
+        <Grid container justify="center">
+          <Grid item xs={11} lg={4}>
+            <MusicPlayer
+              current={this.state.current}
+              elapsed={this.state.elapsed}
+              isPlaying={this.state.isPlaying}
+            />
+          </Grid>
+          <Grid item xs={11} lg={6}>
+            <UpNext
+              songChoices={this.state.songChoices}
+              totalVotes={this.state.totalVotes}
+              acceptingVotes={this.state.acceptingVotes}
+              socket={socket}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={11} lg={6}>
-          <UpNext
-            songChoices={this.state.songChoices}
-            totalVotes={this.state.totalVotes}
-            acceptingVotes={this.state.acceptingVotes}
-            socket={socket}
-          />
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }

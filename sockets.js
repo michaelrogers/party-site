@@ -101,7 +101,7 @@ exports = module.exports = async function(server) {
               console.log({delayUpdate});
               acceptingVotes = false;
               io.emit('player:accepting-votes', acceptingVotes);
-
+              
               await determineVoteWinner();
               await fetchNewUpNext();
               setTimeout(async function() {
@@ -112,12 +112,9 @@ exports = module.exports = async function(server) {
                 io.emit('player:current', currentSongData); 
                 io.emit('player:song-choices', upNextChoices);
               }, delayUpdate);
-            } else {
-              console.log('Playlist: Update ignored');
-            }
-          }
+            } else { console.log('Playlist: Update ignored'); }
+          } 
           io.emit('player:current', currentSongData); 
-          // io.emit('player:song-choices', upNextChoices); 
       }
     } catch (e) {
       console.error(e);
@@ -136,10 +133,16 @@ exports = module.exports = async function(server) {
   }
 
   io.on('connection', socket => {
-    io.emit('player:current', currentSongData);
-    io.emit('player:song-choices', upNextChoices);
-    io.emit('player:accepting-votes', acceptingVotes);
-    io.emit('user:count', socket.server.engine.clientsCount);
+
+    socket.on('mount', () => {
+      io.emit('player:current', currentSongData);
+      if (acceptingVotes) {
+        io.emit('player:song-choices', upNextChoices); 
+      }
+      io.emit('player:accepting-votes', acceptingVotes);
+      io.emit('user:count', socket.server.engine.clientsCount);
+    });
+
     
     socket.on('song:vote', uri => {
       const songIndex = upNextChoices.map(song => song.uri).indexOf(uri);

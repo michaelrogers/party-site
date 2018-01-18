@@ -169,6 +169,10 @@ footer { height: 150px; }
   .page-header {
     font-size: 2.5em !important;
   }
+
+  .MuiCardMedia-root-183 {
+      height: 300px !important;
+    }
   /* .ButtonAppBar-root-12 {
     margin-bottom: 30px !important;
   } */

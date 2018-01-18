@@ -15,7 +15,7 @@ const styles = {
 
   },
   actionHeader: {
-    fontSize:'1.5em',
+    fontSize:'1.4em',
     padding: '1em'
   }
 };
@@ -49,7 +49,7 @@ export default class UpNext extends Component {
       const maxVotes = songChoices.reduce((acc, song) => Math.max(acc, song.votes), 0);
       return songChoices.map((choice, i) => {
         return (
-          <Button color="accent" disableRipple={!acceptingVotes} fullWidth={true} key={i} onClick={this.voteForSong.bind(this, choice.uri)} 
+          <Button color="accent" disableRipple={!acceptingVotes} fullwidth={'true'} key={i} onClick={this.voteForSong.bind(this, choice.uri)} 
             style={{...styles.voteButton, ...this.computeChoiceStyle(choice.votes, maxVotes, acceptingVotes)}}
           >
             <SongChoice song={choice} totalVotes={this.props.totalVotes} />
