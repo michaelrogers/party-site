@@ -41,7 +41,7 @@ export default class MusicPage extends Component {
     socket.off('player:accepting-votes');
   }
   componentDidMount() {
-    console.log('Component Mount')
+    console.log('Component Mount');
     socket.on('player:current', this.updateCurrentSong);
     socket.on('player:song-choices', this.updateSongChoices);
     socket.on('player:accepting-votes', this.updateAcceptingVotes);
@@ -49,7 +49,7 @@ export default class MusicPage extends Component {
     socket.emit('mount');
   }
   updateCurrentSong(data) {
-    console.log('updateCurrentSong')
+    console.log('updateCurrentSong');
     this.setState({
       current: data.currentSong, 
       isPlaying: data.isPlaying, 
