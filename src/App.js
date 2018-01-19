@@ -5,10 +5,8 @@ import {
   Switch
 } from 'react-router-dom';
 import { TransitionGroup, CSSTransition} from 'react-transition-group';
-// import logo from './logo.svg';
 import './styles/index.css';
 
-// import Grid from 'material-ui/Grid';
 import HomePage from './pages/HomePage';
 
 // =====Pages=======================
@@ -43,6 +41,7 @@ export default class App extends Component {
           drawer={this.state.drawer}
           toggleDrawer={this.toggleDrawer}
         />
+        
         <AppBar
           toggleDrawer={this.toggleDrawer}
           Link={Link}

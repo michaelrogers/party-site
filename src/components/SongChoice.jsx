@@ -11,7 +11,9 @@ import { LinearProgress } from 'material-ui/Progress';
 
 const styles = theme => ({
   card: {
-    display: 'flex',
+    display: '-webkit-flex',
+    
+    // display: 'flex',
     justifyContent: 'space-between',
     position: 'relative',
     background: 'transparent',
@@ -26,7 +28,8 @@ const styles = theme => ({
     borderRadius: '2px 0 0 2px'
   },
   details: {
-    display: 'flex',
+    display: '-webkit-flex',
+    // display: 'flex',
     flexDirection: 'column',
     maxWidth: '55%'
     
