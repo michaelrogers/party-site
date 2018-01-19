@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Card, { CardContent } from 'material-ui/Card';
+import Card, {
+  // CardContent 
+} from 'material-ui/Card';
 import Button from 'material-ui/Button';
 
 import Typography from 'material-ui/Typography';
@@ -63,10 +65,10 @@ export default class UpNext extends Component {
     return (
       <div>
         <Card>
-            <Typography component="h2" align="center" style={styles.actionHeader}>
-              Tap to control the vibes
-            </Typography>
-            
+          <Typography component="h2" align="center" style={styles.actionHeader}>
+            Tap to control the vibes
+          </Typography>
+          
         </Card>
         <br/>
         <div>

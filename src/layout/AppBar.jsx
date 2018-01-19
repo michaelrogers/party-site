@@ -13,6 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { Link } from 'react-router-dom';
+const showMusic = process.env.showMusic || false;
 
 const styles = theme => ({
   root: {
@@ -41,6 +42,17 @@ const styles = theme => ({
 });
 // export default class ButtonAppBar extends Component {
 
+function showMusicLink(classes) {
+  if (showMusic) {
+    return (
+      <Link className="navbar-link" to="/music">
+        <Button className={classes.navButton}>Music</Button>
+      </Link>
+    );
+  }
+}
+
+
 function ButtonAppBar(props) {
   const { classes, toggleDrawer } = props;
   return(
@@ -66,9 +78,7 @@ function ButtonAppBar(props) {
             <Link className="navbar-link" to="/rsvp">
               <Button className={classes.navButton}>RSVP</Button>
             </Link>
-            <Link className="navbar-link" to="/music">
-              <Button className={classes.navButton}>Music</Button>
-            </Link>
+            {showMusicLink(classes)}
           </Hidden>
         </Toolbar>
       </AppBar>

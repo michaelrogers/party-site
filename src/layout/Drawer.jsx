@@ -12,6 +12,21 @@ import List, {
 // const styles = {
 
 // };
+const showMusic = process.env.showMusic || false;
+
+
+function showMusicLink(classes) {
+  if (showMusic) {
+    return (
+      <Link to="/music">
+          <ListItem button>
+            <ListItemText className="drawer-item" primary="Music" />
+          </ListItem>
+        </Link>
+    );
+  }
+}
+
 
 
 export default class DrawerCustom extends Component {
@@ -62,14 +77,9 @@ export default class DrawerCustom extends Component {
                   <ListItemText className="drawer-item" primary="RSVP" />
                 </ListItem>
               </Link>
-              <Link to="/music">
-                <ListItem button>
-                  <ListItemText className="drawer-item" primary="Music" />
-                </ListItem>
-              </Link>
+              {showMusicLink()}
             </List>
             <Divider />
-            <List></List>
           </div>
         </div>
       </Drawer>
