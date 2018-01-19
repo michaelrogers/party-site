@@ -20,10 +20,10 @@ const styles = {
   },
 
   card: {
-    display: 'flex',
+    display: '-webkit-flex',
   },
   details: {
-    display: 'flex',
+    display: '-webkit-flex',
     flexDirection: 'column',
   },
   content: {
@@ -37,7 +37,7 @@ const styles = {
     height: 200,
   },
   controls: {
-    display: 'flex',
+    display: '-webkit-flex',
     alignItems: 'center',
     // paddingLeft: theme.spacing.unit,
     // paddingBottom: theme.spacing.unit,
