@@ -22,6 +22,8 @@ const styles = theme => ({
   },
   linearProgress: {
     position: 'absolute',
+    left: 0,
+    top: 0,
     width: 'calc(100% - 151px)',
     height: '100%',
     zIndex: -1,
