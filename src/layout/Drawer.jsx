@@ -16,7 +16,7 @@ const showMusic = process.env.showMusic;
 
 
 function showMusicLink() {
-  if (showMusic) {
+  if (showMusic == 'true') {
     return (
       <Link to="/music">
           <ListItem button>

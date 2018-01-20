@@ -43,7 +43,7 @@ const styles = theme => ({
 // export default class ButtonAppBar extends Component {
 
 function showMusicLink(classes) {
-  if (showMusic) {
+  if (showMusic == 'true') {
     return (
       <Link className="navbar-link" to="/music">
         <Button className={classes.navButton}>Music</Button>
