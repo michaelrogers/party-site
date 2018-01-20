@@ -13,7 +13,7 @@ import List, {
 
 // };
 const showMusic = process.env.showMusic;
-
+console.log({showMusic})
 
 function showMusicLink() {
   if (showMusic == 'true') {
