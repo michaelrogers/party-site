@@ -12,7 +12,7 @@ import List, {
 // const styles = {
 
 // };
-const showMusic = process.env.showMusic;
+const showMusic = process.env.REACT_APP_SHOW_MUSIC;
 console.log({showMusic})
 
 function showMusicLink() {

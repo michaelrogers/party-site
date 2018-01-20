@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { Link } from 'react-router-dom';
-const showMusic = process.env.showMusic;
+const showMusic = process.env.REACT_APP_SHOW_MUSIC;
 
 const styles = theme => ({
   root: {
