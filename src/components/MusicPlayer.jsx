@@ -115,6 +115,7 @@ export default class MusicPlayer extends Component {
     return (
       <Card>
         <CardMedia
+          id ="album-card"
           style={styles.albumCover}
           image={this.props.current.imagery}
           title={this.props.current.album}
@@ -123,7 +124,7 @@ export default class MusicPlayer extends Component {
           <Typography type="caption" component="p">
             Now Playing
           </Typography>
-          <Typography type="headline" component="h2">
+          <Typography type="headline" component="h2" id="player-title">
             {this.props.current.title}
           </Typography>
           <Typography component="p" type="subheading">

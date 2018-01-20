@@ -63,17 +63,14 @@ export default class UpNext extends Component {
 
   render() {
     return (
-      <div>
+      <div id="up-next">
         <Card>
-          <Typography component="h2" align="center" style={styles.actionHeader}>
+          <Typography component="h2" align="center" id="action-header" style={styles.actionHeader}>
             Tap to control the vibes
           </Typography>
-          
         </Card>
         <br/>
-        <div>
-          {this.populateSongChoices(this.props.acceptingVotes)}
-        </div>
+        {this.populateSongChoices(this.props.acceptingVotes)}
       </div>
     );
   }

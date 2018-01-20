@@ -162,6 +162,9 @@ a:active {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+.clamp-1 {
+  -webkit-line-clamp: 1;
+}
 
 footer { height: 150px; }
 
@@ -169,10 +172,33 @@ footer { height: 150px; }
   .page-header {
     font-size: 2.5em !important;
   }
-
-  .MuiCardMedia-root-183 {
-      height: 300px !important;
+    footer {
+      height: 0;
     }
+    #album-card {
+      height: 300px !important;
+      display: none;
+   
+    }
+    #action-header {
+      display: none;
+    }
+    #player-title {
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+    }
+    .MuiCardActions-root-204 {
+      display: none !important;
+    }
+    #album-card  + .MuiCardContent-root-185 {
+      margin-top: -13px;
+    }
+    #up-next {
+      margin-top: -18px;
+    }
+    
   /* .ButtonAppBar-root-12 {
     margin-bottom: 30px !important;
   } */

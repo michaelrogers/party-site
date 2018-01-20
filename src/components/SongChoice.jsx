@@ -23,27 +23,39 @@ const styles = theme => ({
     position: 'absolute',
     left: 0,
     top: 0,
-    width: 'calc(100% - 151px)',
+    width: 'calc(100% - 202px)',
     height: '100%',
     zIndex: -1,
     borderRadius: '2px 0 0 2px'
   },
   details: {
     display: '-webkit-flex',
-    // display: 'flex',
     flexDirection: 'column',
     maxWidth: '55%'
-    
   },
   content: {
     flex: '1 0 auto',
   },
   cover: {
-    width: 151,
-    height: 151,
+    width: 202,
+    height: 202,
     textAlign: 'right',
     borderRadius: '0 2px 2px 0'
-    
+  },
+  '@media (max-width: 600px)': {
+    cover: {
+      width: 120,
+      height: 120
+    },
+    linearProgress: {
+      width: 'calc(100% - 120px)',
+    },
+    headline: {
+      fontSize: '1.4em'
+    },
+    subheading: {
+      fontSize: '1em'
+    }
   },
   controls: {
     // display: 'flex',
