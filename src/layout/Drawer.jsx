@@ -12,10 +12,10 @@ import List, {
 // const styles = {
 
 // };
-const showMusic = process.env.showMusic || false;
+const showMusic = process.env.showMusic;
 
 
-function showMusicLink(classes) {
+function showMusicLink() {
   if (showMusic) {
     return (
       <Link to="/music">
