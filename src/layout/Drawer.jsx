@@ -12,10 +12,10 @@ import List, {
 // const styles = {
 
 // };
-const showMusic = process.env.REACT_APP_SHOW_MUSIC;
+// const showMusic = process.env.REACT_APP_SHOW_MUSIC;
 
 function showMusicLink() {
-  if (showMusic == 'true') {
+  // if (showMusic == 'true') {
     return (
       <Link to="/music">
         <ListItem button>
@@ -23,7 +23,7 @@ function showMusicLink() {
         </ListItem>
       </Link>
     );
-  }
+  // }
 }
 
 export default class DrawerCustom extends Component {

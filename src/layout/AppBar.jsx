@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { Link } from 'react-router-dom';
-const showMusic = process.env.REACT_APP_SHOW_MUSIC;
+// const showMusic = process.env.REACT_APP_SHOW_MUSIC;
 
 const styles = theme => ({
   root: {
@@ -43,13 +43,13 @@ const styles = theme => ({
 // export default class ButtonAppBar extends Component {
 
 function showMusicLink(classes) {
-  if (showMusic == 'true') {
+  // if (showMusic == 'true') {
     return (
       <Link className="navbar-link" to="/music">
         <Button className={classes.navButton}>Music</Button>
       </Link>
     );
-  }
+  // }
 }
 
 
