@@ -13,21 +13,18 @@ import List, {
 
 // };
 const showMusic = process.env.REACT_APP_SHOW_MUSIC;
-console.log({showMusic})
 
 function showMusicLink() {
   if (showMusic == 'true') {
     return (
       <Link to="/music">
-          <ListItem button>
-            <ListItemText className="drawer-item" primary="Music" />
-          </ListItem>
-        </Link>
+        <ListItem button>
+          <ListItemText className="drawer-item" primary="Music" />
+        </ListItem>
+      </Link>
     );
   }
 }
-
-
 
 export default class DrawerCustom extends Component {
   // constructor(props) {

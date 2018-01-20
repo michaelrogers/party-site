@@ -78,7 +78,7 @@ export default class MusicPage extends Component {
       <div>
         {/* <CustomParticles style={{height: '100%'}}/> */}
         <Grid container justify="center">
-          <Grid item xs={11} lg={4}>
+          <Grid item xs={11} md={6} lg={4}>
             <div id="music-player">  
               <MusicPlayer
                 current={this.state.current}
@@ -87,7 +87,7 @@ export default class MusicPage extends Component {
                 />
               </div>
           </Grid>
-          <Grid item xs={11} lg={6}>
+          <Grid item xs={11} md={6} lg={6}>
             <UpNext
               songChoices={this.state.songChoices}
               totalVotes={this.state.totalVotes}
