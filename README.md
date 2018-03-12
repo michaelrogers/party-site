@@ -9,3 +9,9 @@ The server utilized websockets to communicate in real-time to all connected clie
 Front End
 --------
 The Front End made use of the Material UI Next component library. The voting modules used modified LinearProgress and Button components to handle the touch animations and represent the current vote percentage.  
+
+Screenshots
+------------
+![Desktop](./Screenshot-Desktop.png)
+![Tablet](./Screenshot-Tablet.png)
+![Desktop](./Screenshot-Mobile.png)
